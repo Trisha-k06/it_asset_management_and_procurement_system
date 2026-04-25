@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#434653",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#bcceff",
+                        "secondary-fixed": "#d8e3fb",
+                        "secondary": "#545f73",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#b0c6ff",
+                        "primary": "#003c90",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#00419c",
+                        "surface-bright": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-tertiary-container": "#9dd5ff",
+                        "background": "#f7f9fb",
+                        "on-secondary-container": "#586377",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container-low": "#f2f4f6",
+                        "on-surface": "#191c1e",
+                        "tertiary-fixed-dim": "#89ceff",
+                        "tertiary-container": "#005e87",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#737784",
+                        "on-primary-fixed": "#001945",
+                        "on-tertiary-fixed": "#001e2f",
+                        "outline-variant": "#c3c6d5",
+                        "surface": "#f7f9fb",
+                        "error": "#ba1a1a",
+                        "tertiary": "#004565",
+                        "tertiary-fixed": "#c9e6ff",
+                        "secondary-container": "#d5e0f8",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container": "#eceef0",
+                        "surface-tint": "#1d59c1",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "on-tertiary-fixed-variant": "#004c6e",
+                        "surface-dim": "#d8dadc",
+                        "primary-fixed-dim": "#b0c6ff",
+                        "primary-fixed": "#d9e2ff",
+                        "on-background": "#191c1e",
+                        "primary-container": "#0f52ba",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary-fixed": "#111c2d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "sidebar-width": "260px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "grid-gutter": "20px",
+                        "sm": "8px",
+                        "grid-columns": "12",
+                        "xl": "32px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Inter"],
+                        "label-md": ["Inter"],
+                        "h1": ["Inter"],
+                        "h3": ["Inter"],
+                        "code": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "h2": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-md": ["13px", {"lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "h1": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "h3": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "code": ["13px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-surface">
+<!-- SideNavBar -->
+<aside class="bg-slate-900 w-[260px] h-screen fixed left-0 top-0 border-r border-slate-800 shadow-xl flex flex-col h-full pt-4 pb-8 z-50 font-inter text-[13px] font-medium">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+</div>
+<div>
+<div class="text-lg font-bold text-white leading-tight">AssetWise</div>
+<div class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">IT Management</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors duration-150 cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-slate-800 text-blue-400 border-l-4 border-blue-500 transition-colors duration-150 cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span>Assets</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors duration-150 cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span>Vendors</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors duration-150 cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span>Purchase Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors duration-150 cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span>Employees</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-800 pt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors duration-150 cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">terminal</span>
+<span>System Logs</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors duration-150 cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span>Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-[260px] z-40 flex items-center justify-between px-6 h-16 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-200 ease-in-out">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Search assets, serials, or tags..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1 border-r border-slate-200 pr-4">
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-all duration-200 active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-all duration-200 active:opacity-80">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-all duration-200 active:opacity-80">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right hidden sm:block">
+<div class="text-sm font-semibold text-slate-900">Admin User</div>
+<div class="text-xs text-slate-500">Super Administrator</div>
+</div>
+<img alt="Administrator profile avatar" class="w-10 h-10 rounded-full object-cover border-2 border-primary-fixed shadow-sm" data-alt="professional headshot of a corporate IT administrator in a modern office environment with warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvUgkg54r-K2uTM12JBg-cfGVeTBvQp3SrU4CK-5W7n4ImP9-WqR3rTXXJXVJRDJvv3cZkYE3VpJIdyfEobItmimUwkxmnpKX0vDgmt0lgaQ9PpUDQpgQc5um_ulCov_l3AuJoIlwohdgQfXGRyV4frBs55H-dGHFjZsiZkuJqbD6tl2U1YN-Pux3u3Cahu5CyyMrcw3Unc_5d92rbPQQxL9z5nvE7DideHhfRSLJTRAw5RSSay1OOA4qR32KpXyb73SIbdemKRa4k"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-[260px] pt-16 min-h-screen">
+<div class="p-8">
+<!-- Page Header -->
+<div class="flex items-center justify-between mb-8">
+<div>
+<h1 class="font-h1 text-h1 text-on-surface">Assets</h1>
+<nav class="flex text-label-sm text-on-surface-variant gap-2 mt-1">
+<a class="hover:text-primary" href="#">Inventory</a>
+<span>/</span>
+<span class="font-semibold text-primary">All Assets</span>
+</nav>
+</div>
+<button class="flex items-center gap-2 bg-primary-container text-white px-5 py-2.5 rounded-lg shadow-md hover:bg-primary transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg">add</span>
+<span class="font-label-md text-label-md">Add New Asset</span>
+</button>
+</div>
+<!-- Bento Grid Stats (Optional but enhances the "Modern/Corporate" aesthetic) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+<div class="bg-white p-6 rounded-xl border border-slate-200 shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1)]">
+<div class="text-slate-500 text-sm mb-1 font-medium">Total Inventory</div>
+<div class="text-3xl font-bold text-slate-900">2,540</div>
+<div class="mt-2 flex items-center text-xs text-emerald-600 font-bold">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+12% this month</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-slate-200 shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1)]">
+<div class="text-slate-500 text-sm mb-1 font-medium">Active Devices</div>
+<div class="text-3xl font-bold text-slate-900">2,185</div>
+<div class="mt-2 flex items-center text-xs text-blue-600 font-bold">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span>86% Deployment rate</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-slate-200 shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1)]">
+<div class="text-slate-500 text-sm mb-1 font-medium">In Repair</div>
+<div class="text-3xl font-bold text-slate-900">42</div>
+<div class="mt-2 flex items-center text-xs text-amber-600 font-bold">
+<span class="material-symbols-outlined text-sm">build</span>
+<span>Avg. 3 day turnaround</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-slate-200 shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1)]">
+<div class="text-slate-500 text-sm mb-1 font-medium">Retired</div>
+<div class="text-3xl font-bold text-slate-900">313</div>
+<div class="mt-2 flex items-center text-xs text-slate-500 font-bold">
+<span class="material-symbols-outlined text-sm">archive</span>
+<span>Lifecycle completed</span>
+</div>
+</div>
+</div>
+<!-- Data Table Card -->
+<div class="bg-white rounded-xl border border-slate-200 shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1)] overflow-hidden">
+<div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+<h3 class="font-h3 text-h3 text-on-surface">Asset Inventory</h3>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-lg border border-slate-200 transition-all">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-lg border border-slate-200 transition-all">
+<span class="material-symbols-outlined text-lg">download</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-slate-50/50 border-b border-slate-200">
+<th class="px-6 py-4 font-label-md text-label-md text-slate-500 uppercase tracking-wider">Asset Tag</th>
+<th class="px-6 py-4 font-label-md text-label-md text-slate-500 uppercase tracking-wider">Serial No</th>
+<th class="px-6 py-4 font-label-md text-label-md text-slate-500 uppercase tracking-wider">Make</th>
+<th class="px-6 py-4 font-label-md text-label-md text-slate-500 uppercase tracking-wider">Model</th>
+<th class="px-6 py-4 font-label-md text-label-md text-slate-500 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 font-label-md text-label-md text-slate-500 uppercase tracking-wider">Subtype</th>
+<th class="px-6 py-4 font-label-md text-label-md text-slate-500 uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4 font-semibold text-primary">AW-2024-001</td>
+<td class="px-6 py-4 text-slate-600 font-code">SN-9982-XYZ</td>
+<td class="px-6 py-4">Apple</td>
+<td class="px-6 py-4">MacBook Pro 14" M3</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                                        Active
+                                    </span>
+</td>
+<td class="px-6 py-4 text-slate-500">Laptop</td>
+<td class="px-6 py-4 text-right space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-blue-50 rounded transition-all">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-error hover:bg-red-50 rounded transition-all">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4 font-semibold text-primary">AW-2024-002</td>
+<td class="px-6 py-4 text-slate-600 font-code">SN-7721-LMN</td>
+<td class="px-6 py-4">Dell</td>
+<td class="px-6 py-4">XPS 15 (9530)</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
+                                        In Repair
+                                    </span>
+</td>
+<td class="px-6 py-4 text-slate-500">Workstation</td>
+<td class="px-6 py-4 text-right space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-blue-50 rounded transition-all">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-error hover:bg-red-50 rounded transition-all">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4 font-semibold text-primary">AW-2024-003</td>
+<td class="px-6 py-4 text-slate-600 font-code">SN-1104-ABC</td>
+<td class="px-6 py-4">HP</td>
+<td class="px-6 py-4">EliteBook 840 G10</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-800">
+                                        Retired
+                                    </span>
+</td>
+<td class="px-6 py-4 text-slate-500">Laptop</td>
+<td class="px-6 py-4 text-right space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-blue-50 rounded transition-all">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-error hover:bg-red-50 rounded transition-all">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4 font-semibold text-primary">AW-2024-004</td>
+<td class="px-6 py-4 text-slate-600 font-code">SN-5566-DEF</td>
+<td class="px-6 py-4">Logitech</td>
+<td class="px-6 py-4">MX Master 3S</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                                        Active
+                                    </span>
+</td>
+<td class="px-6 py-4 text-slate-500">Peripheral</td>
+<td class="px-6 py-4 text-right space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-blue-50 rounded transition-all">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-error hover:bg-red-50 rounded transition-all">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4 font-semibold text-primary">AW-2024-005</td>
+<td class="px-6 py-4 text-slate-600 font-code">SN-8843-GHI</td>
+<td class="px-6 py-4">Samsung</td>
+<td class="px-6 py-4">Odyssey G7 32"</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                                        Active
+                                    </span>
+</td>
+<td class="px-6 py-4 text-slate-500">Monitor</td>
+<td class="px-6 py-4 text-right space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-blue-50 rounded transition-all">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-error hover:bg-red-50 rounded transition-all">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between">
+<div class="text-sm text-slate-500">
+                        Showing <span class="font-semibold text-slate-900">1 to 5</span> of <span class="font-semibold text-slate-900">2,540</span> results
+                    </div>
+<div class="flex items-center gap-1">
+<button class="px-3 py-1 text-slate-500 hover:bg-white hover:border-slate-300 border border-transparent rounded transition-all">Previous</button>
+<button class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded font-semibold">1</button>
+<button class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-white hover:border-slate-300 border border-transparent rounded transition-all">2</button>
+<button class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-white hover:border-slate-300 border border-transparent rounded transition-all">3</button>
+<span class="px-1">...</span>
+<button class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-white hover:border-slate-300 border border-transparent rounded transition-all">508</button>
+<button class="px-3 py-1 text-slate-500 hover:bg-white hover:border-slate-300 border border-transparent rounded transition-all">Next</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

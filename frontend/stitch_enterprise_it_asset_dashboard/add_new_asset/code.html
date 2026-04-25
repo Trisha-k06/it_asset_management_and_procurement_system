@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2d3133",
+                        "secondary-fixed": "#d8e3fb",
+                        "tertiary-fixed-dim": "#89ceff",
+                        "tertiary-fixed": "#c9e6ff",
+                        "on-surface-variant": "#434653",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#b0c6ff",
+                        "surface-bright": "#f7f9fb",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "outline-variant": "#c3c6d5",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#003c90",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f7f9fb",
+                        "secondary-container": "#d5e0f8",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#004c6e",
+                        "on-tertiary-fixed": "#001e2f",
+                        "surface-dim": "#d8dadc",
+                        "primary-fixed-dim": "#b0c6ff",
+                        "primary-container": "#0f52ba",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container": "#eceef0",
+                        "on-tertiary-container": "#9dd5ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-primary-fixed": "#001945",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "tertiary": "#004565",
+                        "tertiary-container": "#005e87",
+                        "on-secondary-container": "#586377",
+                        "on-primary-fixed-variant": "#00419c",
+                        "on-primary-container": "#bcceff",
+                        "on-secondary-fixed": "#111c2d",
+                        "background": "#f7f9fb",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#d9e2ff",
+                        "on-background": "#191c1e",
+                        "surface-variant": "#e0e3e5",
+                        "surface-tint": "#1d59c1",
+                        "surface-container-low": "#f2f4f6",
+                        "on-surface": "#191c1e",
+                        "outline": "#737784",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary": "#545f73"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "grid-gutter": "20px",
+                        "sidebar-width": "260px",
+                        "grid-columns": "12",
+                        "xl": "32px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "h1": ["Inter"],
+                        "h3": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "h2": ["Inter"],
+                        "label-md": ["Inter"],
+                        "code": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "h1": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "h3": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "h2": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-md": ["13px", {"lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "code": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-surface">
+<!-- SideNavBar -->
+<aside class="w-[260px] h-screen fixed left-0 top-0 border-r border-slate-800 bg-slate-900 dark:bg-black shadow-2xl flex flex-col h-full z-50">
+<div class="p-lg flex items-center gap-md">
+<div class="w-8 h-8 bg-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tight text-white">AssetCentral</h1>
+<p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Enterprise IT Management</p>
+</div>
+</div>
+<nav class="flex-1 mt-md">
+<div class="px-md mb-xs">
+<p class="text-[11px] font-bold text-slate-500 px-4 uppercase tracking-wider">Main Navigation</p>
+</div>
+<!-- Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors font-inter antialiased text-sm font-medium" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<!-- Active (Semantic Mapping: Add New Asset falls under Assets) -->
+<a class="flex items-center gap-3 px-4 py-3 bg-slate-800 text-white border-l-4 border-blue-600 font-inter antialiased text-sm font-medium" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+                Assets
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors font-inter antialiased text-sm font-medium" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+                Procurement
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors font-inter antialiased text-sm font-medium" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+                Reports
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors font-inter antialiased text-sm font-medium" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="mt-auto border-t border-slate-800/50 pb-md">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors font-inter antialiased text-sm font-medium" href="#">
+<span class="material-symbols-outlined">help</span>
+                Support
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors font-inter antialiased text-sm font-medium" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Log Out
+            </a>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-260px)] z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm flex justify-between items-center px-8 h-16 font-inter text-slate-900">
+<div class="flex items-center gap-lg">
+<h2 class="text-lg font-semibold text-slate-900">Add New Asset</h2>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-slate-100 border-none rounded-lg text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search resources..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="hover:bg-slate-50 p-2 rounded-full transition-colors active:opacity-70">
+<span class="material-symbols-outlined text-slate-600">notifications</span>
+</button>
+<button class="hover:bg-slate-50 p-2 rounded-full transition-colors active:opacity-70">
+<span class="material-symbols-outlined text-slate-600">help_outline</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right">
+<p class="text-xs font-bold text-slate-900 leading-none">Admin User</p>
+<p class="text-[10px] text-slate-500">System Administrator</p>
+</div>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-slate-200 object-cover" data-alt="Professional headshot of a smiling middle-aged man in a corporate office setting with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC70mBw3vY9r3grg7NjCla1MiQB7hnEzCwVxnjcbAxlrBuAaBP71nZVSyerEwq2Pp2niYN9N6dKjrfCGUSKuT-0LYxpGrYV1zqC6QmrWHeG5bzErN5LsH5IBglEbQ33ssq6wcbmyvsab-zT5oDQPXVaGfGlJu2oS8tarlOtUwozeCzuVJ5zRlNCqznEywXXV_Zpw5eOP2A7jPhuZzusiwP22ZFS4P1rZ5PmAZCjv8Rytd6NK9ujwMS37WrZHuSiIxODgQzClhMi26Eh"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-[260px] pt-16 min-h-screen">
+<div class="max-w-5xl mx-auto p-xl">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 mb-lg text-slate-500">
+<span class="text-label-sm font-label-sm">Assets</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-label-sm font-label-sm text-primary">Inventory Management</span>
+</nav>
+<!-- Form Card -->
+<div class="bg-white border border-slate-200 shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1)] rounded-lg overflow-hidden">
+<div class="px-xl py-lg border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+<div>
+<h3 class="font-h3 text-h3 text-slate-900">Asset Specifications</h3>
+<p class="text-body-md font-body-md text-slate-500 mt-1">Register hardware components into the centralized database.</p>
+</div>
+<div class="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-bold uppercase tracking-wider">
+                        Step 1 of 1
+                    </div>
+</div>
+<form class="p-xl space-y-xl">
+<!-- Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Row 1 -->
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-slate-700 block">Asset Tag</label>
+<input class="w-full px-md py-2.5 rounded border border-slate-300 bg-white text-body-md font-body-md focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all shadow-sm" placeholder="e.g. AST-99201" type="text"/>
+</div>
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-slate-700 block">Serial Number</label>
+<input class="w-full px-md py-2.5 rounded border border-slate-300 bg-white text-body-md font-body-md focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all shadow-sm" placeholder="SN: X882-J01-LL" type="text"/>
+</div>
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-slate-700 block">Asset Type</label>
+<select class="w-full px-md py-2.5 rounded border border-slate-300 bg-white text-body-md font-body-md focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all shadow-sm appearance-none">
+<option>Laptop</option>
+<option>Workstation</option>
+<option>Server</option>
+<option>Mobile</option>
+<option>Peripheral</option>
+</select>
+</div>
+<!-- Row 2 -->
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-slate-700 block">Make</label>
+<input class="w-full px-md py-2.5 rounded border border-slate-300 bg-white text-body-md font-body-md focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all shadow-sm" placeholder="e.g. Dell, Apple, HP" type="text"/>
+</div>
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-slate-700 block">Model</label>
+<input class="w-full px-md py-2.5 rounded border border-slate-300 bg-white text-body-md font-body-md focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all shadow-sm" placeholder="e.g. Latitude 5420" type="text"/>
+</div>
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-slate-700 block">Status</label>
+<select class="w-full px-md py-2.5 rounded border border-slate-300 bg-white text-body-md font-body-md focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all shadow-sm appearance-none">
+<option>Active</option>
+<option>In Repair</option>
+<option>Reserved</option>
+<option>Retired</option>
+</select>
+</div>
+<!-- Row 3 -->
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-slate-700 block">Purchase Cost (USD)</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+<input class="w-full pl-8 pr-md py-2.5 rounded border border-slate-300 bg-white text-body-md font-body-md focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all shadow-sm" placeholder="0.00" type="number"/>
+</div>
+</div>
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-slate-700 block">Warranty Start Date</label>
+<input class="w-full px-md py-2.5 rounded border border-slate-300 bg-white text-body-md font-body-md focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all shadow-sm" type="date"/>
+</div>
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-slate-700 block">Warranty End Date</label>
+<input class="w-full px-md py-2.5 rounded border border-slate-300 bg-white text-body-md font-body-md focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all shadow-sm" type="date"/>
+</div>
+</div>
+<!-- Additional Details (Bento-style metadata section) -->
+<div class="pt-xl mt-xl border-t border-slate-100">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="bg-slate-50 p-lg rounded-xl border border-slate-100 space-y-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">description</span>
+<h4 class="font-h3 text-label-md text-slate-900">Administrative Notes</h4>
+</div>
+<textarea class="w-full px-md py-2.5 rounded border border-slate-300 bg-white text-body-md font-body-md focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all" placeholder="Add deployment context, assignment history, or specific hardware configurations..." rows="4"></textarea>
+</div>
+<div class="grid grid-cols-1 gap-md">
+<div class="bg-slate-50 p-lg rounded-xl border border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">qr_code</span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-slate-900">QR Generation</p>
+<p class="text-[11px] text-slate-500">Auto-generate tag upon save</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="bg-slate-50 p-lg rounded-xl border border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">history</span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-slate-900">Audit Logging</p>
+<p class="text-[11px] text-slate-500">Track all future modifications</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center justify-end gap-md pt-lg border-t border-slate-100">
+<button class="px-xl py-2.5 rounded border border-primary text-primary font-label-md text-label-md hover:bg-primary/5 transition-colors active:scale-95" type="button">
+                            Cancel
+                        </button>
+<button class="px-xl py-2.5 rounded bg-primary text-white font-label-md text-label-md shadow-lg shadow-primary/20 hover:bg-primary-container transition-all active:scale-95" type="submit">
+                            Save Asset
+                        </button>
+</div>
+</form>
+</div>
+<!-- Contextual Footer Help -->
+<div class="mt-lg flex items-center justify-between text-slate-400 px-md">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-sm">info</span>
+<span class="text-[11px] font-medium tracking-wide uppercase">Requires Admin Level 2 Authorization</span>
+</div>
+<div class="flex items-center gap-md">
+<span class="text-[11px] font-medium tracking-wide uppercase">System V4.2.1-Stable</span>
+</div>
+</div>
+</div>
+</main>
+</body></html>

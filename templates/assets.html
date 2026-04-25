@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AssetPulse — Assets</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary":"#003c90","on-primary":"#ffffff","error":"#ba1a1a","secondary":"#545f73","on-surface":"#191c1e","background":"#f7f9fb"},fontFamily:{sans:["Inter","sans-serif"]},spacing:{"sidebar-width":"260px"}}}}</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+body{font-family:'Inter',sans-serif}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body class="bg-[#f7f9fb] text-[#191c1e]">
+
+<!-- Sidebar -->
+<aside class="fixed left-0 top-0 h-screen w-[260px] bg-slate-900 border-r border-slate-800 shadow-xl flex flex-col py-6 z-50">
+  <div class="px-6 mb-8 flex items-center gap-3">
+    <div class="w-8 h-8 rounded bg-blue-600 flex items-center justify-center"><span class="material-symbols-outlined text-white text-lg">inventory_2</span></div>
+    <div><h1 class="text-xl font-bold text-white">AssetPulse</h1><p class="text-[10px] text-slate-400 uppercase tracking-widest">Enterprise ITAM</p></div>
+  </div>
+  <nav class="flex-1 space-y-1 px-3">
+    <a href="/"               class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+    <a href="/assets"         class="bg-blue-600/10 text-blue-400 border-l-4 border-blue-600 flex items-center gap-3 px-4 py-3 rounded-r text-sm font-medium"><span class="material-symbols-outlined">inventory_2</span>Assets</a>
+    <a href="/vendors"        class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">store</span>Vendors</a>
+    <a href="/purchase-orders"class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">shopping_cart</span>Purchase Orders</a>
+    <a href="/employees"      class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">badge</span>Employees</a>
+  </nav>
+</aside>
+
+<!-- Topbar -->
+<header class="fixed top-0 right-0 left-[260px] h-16 border-b border-slate-200 bg-white/90 backdrop-blur-md shadow-sm flex items-center justify-between px-8 z-40">
+  <div class="flex items-center gap-4 flex-1 max-w-lg">
+    <div class="relative w-full">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+      <input id="search-input" type="text" placeholder="Search assets, serial, tag..." class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+    </div>
+  </div>
+  <div class="flex items-center gap-3">
+    <span class="text-xs text-slate-500 font-medium">Admin User</span>
+    <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">A</div>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="ml-[260px] pt-16 min-h-screen">
+<div class="p-8">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-semibold text-[#191c1e]">Assets</h1>
+      <p class="text-sm text-[#545f73] mt-1">Manage your IT asset inventory</p>
+    </div>
+    <button onclick="openAddModal()" class="bg-[#003c90] text-white px-5 py-2.5 rounded-lg flex items-center gap-2 text-sm font-medium shadow-md hover:brightness-110 transition-all">
+      <span class="material-symbols-outlined text-lg">add</span>Add New Asset
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 mb-6 flex flex-wrap items-center gap-3">
+    <select id="filter-status" class="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+      <option value="">All Statuses</option>
+    </select>
+    <select id="filter-type" class="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+      <option value="">All Types</option>
+    </select>
+    <button onclick="loadAssets()" class="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-700 transition-colors">Apply</button>
+    <button onclick="clearFilters()" class="border border-slate-200 text-slate-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">Clear</button>
+    <span id="asset-count" class="ml-auto text-xs text-slate-500"></span>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="bg-slate-50 border-b border-slate-200">
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Asset Tag</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Make / Model</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Type</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Subtype</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Status</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Cost (₹)</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="assets-body" class="divide-y divide-slate-100">
+          <tr><td colspan="7" class="px-6 py-10 text-center text-slate-400 text-sm">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</main>
+
+<!-- Detail Side Panel -->
+<div id="detail-panel" class="fixed top-0 right-0 h-screen w-[420px] bg-white border-l border-slate-200 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 overflow-y-auto">
+  <div class="flex items-center justify-between p-6 border-b border-slate-100">
+    <h3 id="panel-title" class="text-lg font-semibold text-[#191c1e]">Asset Detail</h3>
+    <button onclick="closePanel()" class="p-2 hover:bg-slate-100 rounded-full transition-colors"><span class="material-symbols-outlined text-slate-500">close</span></button>
+  </div>
+  <div id="panel-content" class="p-6 space-y-6">
+    <p class="text-sm text-slate-400">Select an asset to view details.</p>
+  </div>
+</div>
+
+<!-- Add/Edit Asset Modal -->
+<div id="asset-modal" class="modal-backdrop hidden">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between p-6 border-b border-slate-100">
+      <h3 id="modal-title" class="text-lg font-semibold">Add New Asset</h3>
+      <button onclick="closeModal()" class="p-2 hover:bg-slate-100 rounded-full"><span class="material-symbols-outlined text-slate-500">close</span></button>
+    </div>
+    <form id="asset-form" class="p-6 space-y-4" onsubmit="submitAsset(event)">
+      <input type="hidden" id="asset-id"/>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Asset Tag <span class="text-red-500">*</span></label>
+          <input id="f-asset_tag" type="text" required placeholder="ASSET-LAP-001" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Serial Number</label>
+          <input id="f-serial_no" type="text" placeholder="SN-XXXX-0001" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Make</label>
+          <input id="f-make" type="text" placeholder="Dell, Apple, HP..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Model</label>
+          <input id="f-asset_model" type="text" placeholder="XPS 15, ThinkPad X1..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Asset Type <span class="text-red-500">*</span></label>
+          <select id="f-type_id" onchange="loadSubtypesFor(this.value)" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+            <option value="">Select type...</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Subtype <span class="text-red-500">*</span></label>
+          <select id="f-thisobject2assetsubtype" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+            <option value="">Select subtype...</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Status <span class="text-red-500">*</span></label>
+          <select id="f-thisobject2assetstatus" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+            <option value="">Select status...</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Purchase Cost (₹)</label>
+          <input id="f-purchase_cost" type="number" step="0.01" placeholder="0.00" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Warranty Start</label>
+          <input id="f-warranty_start" type="date" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Warranty End</label>
+          <input id="f-warranty_end" type="date" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+        </div>
+      </div>
+      <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+        <button type="button" onclick="closeModal()" class="px-5 py-2.5 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">Cancel</button>
+        <button type="submit" class="px-5 py-2.5 bg-[#003c90] text-white rounded-lg text-sm font-medium hover:brightness-110 transition-all shadow-md">Save Asset</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Allocate Modal -->
+<div id="alloc-modal" class="modal-backdrop hidden">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4">
+    <div class="flex items-center justify-between p-6 border-b border-slate-100">
+      <h3 class="text-lg font-semibold">Allocate Asset</h3>
+      <button onclick="closeAllocModal()" class="p-2 hover:bg-slate-100 rounded-full"><span class="material-symbols-outlined text-slate-500">close</span></button>
+    </div>
+    <form class="p-6 space-y-4" onsubmit="submitAllocation(event)">
+      <input type="hidden" id="alloc-asset-id"/>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Employee <span class="text-red-500">*</span></label>
+        <select id="alloc-employee" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          <option value="">Select employee...</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Allocation Date</label>
+        <input id="alloc-date" type="date" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Expected Return</label>
+        <input id="alloc-return" type="date" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+      </div>
+      <div class="flex justify-end gap-3 pt-2 border-t border-slate-100">
+        <button type="button" onclick="closeAllocModal()" class="px-5 py-2.5 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Cancel</button>
+        <button type="submit" class="px-5 py-2.5 bg-[#003c90] text-white rounded-lg text-sm font-medium hover:brightness-110 shadow-md">Allocate</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Maintenance Modal -->
+<div id="maint-modal" class="modal-backdrop hidden">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4">
+    <div class="flex items-center justify-between p-6 border-b border-slate-100">
+      <h3 class="text-lg font-semibold">Add Maintenance Record</h3>
+      <button onclick="closeMaintModal()" class="p-2 hover:bg-slate-100 rounded-full"><span class="material-symbols-outlined text-slate-500">close</span></button>
+    </div>
+    <form class="p-6 space-y-4" onsubmit="submitMaintenance(event)">
+      <input type="hidden" id="maint-asset-id"/>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Date</label>
+        <input id="maint-date" type="date" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Notes</label>
+        <textarea id="maint-notes" rows="3" placeholder="Describe the maintenance..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Cost (₹)</label>
+        <input id="maint-cost" type="number" step="0.01" placeholder="0.00" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Status</label>
+        <select id="maint-status" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          <option value="OPEN">OPEN</option>
+          <option value="IN_PROGRESS">IN PROGRESS</option>
+          <option value="COMPLETED">COMPLETED</option>
+        </select>
+      </div>
+      <div class="flex justify-end gap-3 pt-2 border-t border-slate-100">
+        <button type="button" onclick="closeMaintModal()" class="px-5 py-2.5 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Cancel</button>
+        <button type="submit" class="px-5 py-2.5 bg-[#003c90] text-white rounded-lg text-sm font-medium hover:brightness-110 shadow-md">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div id="delete-modal" class="modal-backdrop hidden">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm mx-4 p-6 text-center">
+    <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4"><span class="material-symbols-outlined text-red-600 text-2xl">delete</span></div>
+    <h3 class="text-lg font-semibold text-[#191c1e] mb-2">Delete Asset?</h3>
+    <p class="text-sm text-slate-500 mb-6">This will permanently remove the asset and all its allocations and maintenance records.</p>
+    <div class="flex gap-3 justify-center">
+      <button onclick="closeDeleteModal()" class="px-5 py-2.5 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Cancel</button>
+      <button id="confirm-delete-btn" class="px-5 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 shadow-md">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 z-[200] hidden">
+  <div id="toast-inner" class="flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl text-white text-sm font-medium"></div>
+</div>
+
+<script>
+const API = 'http://localhost:8080';
+const SC = {'Active':'bg-green-100 text-green-800','In Repair':'bg-amber-100 text-amber-800','Reserved':'bg-blue-100 text-blue-800','Retired':'bg-slate-100 text-slate-700','Disposed':'bg-red-100 text-red-800'};
+
+function toast(msg, ok=true){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-inner').textContent=msg;
+  document.getElementById('toast-inner').className=`flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl text-white text-sm font-medium ${ok?'bg-green-600':'bg-red-600'}`;
+  t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'),3000);
+}
+
+// ─── Data ──────────────────────────────────────────────────────────────────
+let allStatuses=[], allSubtypes=[], allTypes=[], employees=[];
+
+async function init(){
+  const [st,sub,ty,em] = await Promise.all([
+    fetch(`${API}/api/asset-statuses`).then(r=>r.json()),
+    fetch(`${API}/api/asset-subtypes`).then(r=>r.json()),
+    fetch(`${API}/api/asset-types`).then(r=>r.json()),
+    fetch(`${API}/api/employees`).then(r=>r.json()),
+  ]);
+  allStatuses=st; allSubtypes=sub; allTypes=ty; employees=em;
+
+  const fSt=document.getElementById('filter-status');
+  st.forEach(s=>fSt.insertAdjacentHTML('beforeend',`<option value="${s.internal_id}">${s.status_name}</option>`));
+  const fTy=document.getElementById('filter-type');
+  ty.forEach(t=>fTy.insertAdjacentHTML('beforeend',`<option value="${t.internal_id}">${t.type_name}</option>`));
+
+  const mSt=document.getElementById('f-thisobject2assetstatus');
+  st.forEach(s=>mSt.insertAdjacentHTML('beforeend',`<option value="${s.internal_id}">${s.status_name}</option>`));
+  const mTy=document.getElementById('f-type_id');
+  ty.forEach(t=>mTy.insertAdjacentHTML('beforeend',`<option value="${t.internal_id}">${t.type_name}</option>`));
+
+  const ae=document.getElementById('alloc-employee');
+  em.forEach(e=>ae.insertAdjacentHTML('beforeend',`<option value="${e.internal_id}">${e.first_name} ${e.last_name||''} (${e.email||''})</option>`));
+
+  document.getElementById('alloc-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('maint-date').value  = new Date().toISOString().split('T')[0];
+
+  loadAssets();
+}
+
+async function loadSubtypesFor(typeId){
+  const sel=document.getElementById('f-thisobject2assetsubtype');
+  sel.innerHTML='<option value="">Select subtype...</option>';
+  if(!typeId) return;
+  const subs = allSubtypes.filter(s=>String(s.thisobject2asset_type)===String(typeId));
+  subs.forEach(s=>sel.insertAdjacentHTML('beforeend',`<option value="${s.internal_id}">${s.subtype_name}</option>`));
+}
+
+async function loadAssets(){
+  const search = document.getElementById('search-input').value;
+  const sid    = document.getElementById('filter-status').value;
+  const tid    = document.getElementById('filter-type').value;
+  let url = `${API}/api/assets?search=${encodeURIComponent(search)}`;
+  if(sid) url+=`&status_id=${sid}`;
+  if(tid) url+=`&type_id=${tid}`;
+
+  const tbody = document.getElementById('assets-body');
+  tbody.innerHTML='<tr><td colspan="7" class="px-6 py-10 text-center text-slate-400 text-sm">Loading...</td></tr>';
+  try {
+    const data = await fetch(url).then(r=>r.json());
+    document.getElementById('asset-count').textContent = `${data.length} asset${data.length!==1?'s':''}`;
+    if(data.length===0){
+      tbody.innerHTML='<tr><td colspan="7" class="px-6 py-10 text-center text-slate-400 text-sm">No assets found.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(a=>{
+      const sc=SC[a.status_name]||'bg-slate-100 text-slate-700';
+      const cost = a.purchase_cost ? '₹'+Number(a.purchase_cost).toLocaleString('en-IN') : '—';
+      return `<tr class="hover:bg-slate-50 transition-colors cursor-pointer" onclick="openPanel(${a.internal_id})">
+        <td class="px-6 py-4 text-sm font-semibold text-blue-700">${a.asset_tag}</td>
+        <td class="px-6 py-4 text-sm text-slate-700">${a.make||''} ${a.asset_model||''}</td>
+        <td class="px-6 py-4 text-sm text-slate-500">${a.type_name||'—'}</td>
+        <td class="px-6 py-4 text-sm text-slate-500">${a.subtype_name||'—'}</td>
+        <td class="px-6 py-4"><span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${sc}">${a.status_name}</span></td>
+        <td class="px-6 py-4 text-sm text-slate-700">${cost}</td>
+        <td class="px-6 py-4 text-right space-x-1" onclick="event.stopPropagation()">
+          <button onclick="openEditModal(${JSON.stringify(a).replace(/"/g,'&quot;')})" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-all"><span class="material-symbols-outlined text-base">edit</span></button>
+          <button onclick="openDeleteModal(${a.internal_id})" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-all"><span class="material-symbols-outlined text-base">delete</span></button>
+        </td>
+      </tr>`;
+    }).join('');
+  } catch(e){ toast('Failed to load assets: '+e.message,false); }
+}
+
+function clearFilters(){
+  document.getElementById('search-input').value='';
+  document.getElementById('filter-status').value='';
+  document.getElementById('filter-type').value='';
+  loadAssets();
+}
+document.getElementById('search-input').addEventListener('input', ()=>{ clearTimeout(window._st); window._st=setTimeout(loadAssets,350); });
+
+// ─── Detail Panel ──────────────────────────────────────────────────────────
+async function openPanel(id){
+  const panel=document.getElementById('detail-panel');
+  panel.classList.remove('translate-x-full');
+  document.getElementById('panel-content').innerHTML='<p class="text-sm text-slate-400">Loading...</p>';
+  try {
+    const a = await fetch(`${API}/api/assets/${id}`).then(r=>r.json());
+    document.getElementById('panel-title').textContent=a.asset_tag;
+    const sc=SC[a.status_name]||'bg-slate-100 text-slate-700';
+    let html=`
+      <div class="space-y-3 text-sm">
+        <div class="flex justify-between"><span class="text-slate-500">Make/Model</span><span class="font-medium">${a.make||'—'} ${a.asset_model||''}</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Serial No</span><span class="font-mono">${a.serial_no||'—'}</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Type / Subtype</span><span>${a.type_name||'—'} / ${a.subtype_name||'—'}</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Status</span><span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${sc}">${a.status_name}</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Cost</span><span>${a.purchase_cost?'₹'+Number(a.purchase_cost).toLocaleString('en-IN'):'—'}</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Warranty</span><span>${a.warranty_start||'—'} → ${a.warranty_end||'—'}</span></div>
+      </div>
+      <div class="flex gap-2 pt-2">
+        <button onclick="openAllocModal(${a.internal_id})" class="flex-1 py-2 bg-blue-50 text-blue-700 rounded-lg text-xs font-semibold hover:bg-blue-100 transition-colors flex items-center justify-center gap-1"><span class="material-symbols-outlined text-sm">person_add</span>Allocate</button>
+        <button onclick="openMaintModal(${a.internal_id})" class="flex-1 py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-semibold hover:bg-amber-100 transition-colors flex items-center justify-center gap-1"><span class="material-symbols-outlined text-sm">build</span>Maintenance</button>
+      </div>`;
+
+    // Allocations
+    html+=`<div><h4 class="text-sm font-semibold text-[#191c1e] mb-3">Allocation History (${a.allocations.length})</h4>`;
+    if(a.allocations.length===0) html+='<p class="text-xs text-slate-400">No allocations.</p>';
+    else a.allocations.forEach(al=>{
+      const asc=al.allocation_status==='ACTIVE'?'bg-green-100 text-green-700':'bg-slate-100 text-slate-600';
+      html+=`<div class="p-3 border border-slate-100 rounded-lg mb-2 text-xs">
+        <div class="flex justify-between mb-1"><span class="font-semibold">${al.employee_name||'—'}</span><span class="inline-flex px-2 py-0.5 rounded-full ${asc} text-[10px] font-bold">${al.allocation_status||''}</span></div>
+        <div class="text-slate-500">Allocated: ${al.allocated_on||'—'} · Type: ${al.allocation_type||'—'}</div>
+        ${al.actual_return_date?`<div class="text-slate-500">Returned: ${al.actual_return_date}</div>`:''}
+      </div>`;
+    });
+    html+='</div>';
+
+    // Maintenance
+    html+=`<div><h4 class="text-sm font-semibold text-[#191c1e] mb-3">Maintenance Records (${a.maintenance.length})</h4>`;
+    if(a.maintenance.length===0) html+='<p class="text-xs text-slate-400">No maintenance records.</p>';
+    else a.maintenance.forEach(m=>{
+      const msc=m.status==='COMPLETED'?'bg-green-100 text-green-700':m.status==='IN_PROGRESS'?'bg-amber-100 text-amber-700':'bg-red-100 text-red-700';
+      html+=`<div class="p-3 border border-slate-100 rounded-lg mb-2 text-xs">
+        <div class="flex justify-between mb-1"><span class="font-semibold">${m.opened_on||'—'}</span><span class="inline-flex px-2 py-0.5 rounded-full ${msc} text-[10px] font-bold">${m.status||''}</span></div>
+        <div class="text-slate-500">${m.notes||'—'}</div>
+        ${m.cost?`<div class="text-slate-500">Cost: ₹${Number(m.cost).toLocaleString('en-IN')}</div>`:''}
+      </div>`;
+    });
+    html+='</div>';
+
+    document.getElementById('panel-content').innerHTML=html;
+  } catch(e){ document.getElementById('panel-content').innerHTML='<p class="text-sm text-red-500">Failed to load: '+e.message+'</p>'; }
+}
+function closePanel(){ document.getElementById('detail-panel').classList.add('translate-x-full'); }
+
+// ─── Add/Edit Asset ─────────────────────────────────────────────────────────
+function openAddModal(){
+  document.getElementById('modal-title').textContent='Add New Asset';
+  document.getElementById('asset-id').value='';
+  document.getElementById('asset-form').reset();
+  document.getElementById('f-thisobject2assetsubtype').innerHTML='<option value="">Select subtype...</option>';
+  document.getElementById('asset-modal').classList.remove('hidden');
+}
+function openEditModal(a){
+  document.getElementById('modal-title').textContent='Edit Asset';
+  document.getElementById('asset-id').value=a.internal_id;
+  document.getElementById('f-asset_tag').value=a.asset_tag||'';
+  document.getElementById('f-serial_no').value=a.serial_no||'';
+  document.getElementById('f-make').value=a.make||'';
+  document.getElementById('f-asset_model').value=a.asset_model||'';
+  document.getElementById('f-purchase_cost').value=a.purchase_cost||'';
+  document.getElementById('f-warranty_start').value=a.warranty_start||'';
+  document.getElementById('f-warranty_end').value=a.warranty_end||'';
+  document.getElementById('f-thisobject2assetstatus').value=a.thisobject2assetstatus||a.status_id||'';
+  // Set type then load subtypes
+  document.getElementById('f-type_id').value=a.type_id||'';
+  loadSubtypesFor(a.type_id||'').then(()=>{
+    document.getElementById('f-thisobject2assetsubtype').value=a.thisobject2assetsubtype||a.subtype_id||'';
+  });
+  document.getElementById('asset-modal').classList.remove('hidden');
+}
+function closeModal(){ document.getElementById('asset-modal').classList.add('hidden'); }
+
+async function submitAsset(e){
+  e.preventDefault();
+  const id = document.getElementById('asset-id').value;
+  const payload={
+    asset_tag: document.getElementById('f-asset_tag').value,
+    serial_no: document.getElementById('f-serial_no').value,
+    make: document.getElementById('f-make').value,
+    asset_model: document.getElementById('f-asset_model').value,
+    purchase_cost: document.getElementById('f-purchase_cost').value||null,
+    warranty_start: document.getElementById('f-warranty_start').value||null,
+    warranty_end: document.getElementById('f-warranty_end').value||null,
+    thisobject2assetsubtype: document.getElementById('f-thisobject2assetsubtype').value,
+    thisobject2assetstatus: document.getElementById('f-thisobject2assetstatus').value,
+  };
+  try {
+    const r = await fetch(`${API}/api/assets${id?'/'+id:''}`,{method:id?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const d = await r.json();
+    if(!r.ok) throw new Error(d.error||'Error');
+    toast(id?'Asset updated!':'Asset created!');
+    closeModal(); loadAssets();
+  } catch(er){ toast(er.message, false); }
+}
+
+// ─── Delete ─────────────────────────────────────────────────────────────────
+let _delId=null;
+function openDeleteModal(id){ _delId=id; document.getElementById('delete-modal').classList.remove('hidden'); }
+function closeDeleteModal(){ document.getElementById('delete-modal').classList.add('hidden'); _delId=null; }
+document.getElementById('confirm-delete-btn').onclick = async function(){
+  if(!_delId) return;
+  try {
+    const r = await fetch(`${API}/api/assets/${_delId}`,{method:'DELETE'});
+    const d = await r.json();
+    if(!r.ok) throw new Error(d.error||'Error');
+    toast('Asset deleted!');
+    closeDeleteModal(); closePanel(); loadAssets();
+  } catch(er){ toast(er.message,false); closeDeleteModal(); }
+};
+
+// ─── Allocate ────────────────────────────────────────────────────────────────
+function openAllocModal(assetId){ document.getElementById('alloc-asset-id').value=assetId; document.getElementById('alloc-modal').classList.remove('hidden'); }
+function closeAllocModal(){ document.getElementById('alloc-modal').classList.add('hidden'); }
+async function submitAllocation(e){
+  e.preventDefault();
+  const payload={
+    thisobject2asset: document.getElementById('alloc-asset-id').value,
+    thisobject2individual: document.getElementById('alloc-employee').value,
+    allocated_on: document.getElementById('alloc-date').value,
+    expected_return_date: document.getElementById('alloc-return').value||null,
+  };
+  try {
+    const r=await fetch(`${API}/api/allocations`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const d=await r.json(); if(!r.ok) throw new Error(d.error||'Error');
+    toast('Asset allocated!'); closeAllocModal(); openPanel(payload.thisobject2asset);
+  } catch(er){ toast(er.message,false); }
+}
+
+// ─── Maintenance ─────────────────────────────────────────────────────────────
+function openMaintModal(assetId){ document.getElementById('maint-asset-id').value=assetId; document.getElementById('maint-modal').classList.remove('hidden'); }
+function closeMaintModal(){ document.getElementById('maint-modal').classList.add('hidden'); }
+async function submitMaintenance(e){
+  e.preventDefault();
+  const aid=document.getElementById('maint-asset-id').value;
+  const payload={
+    thisobject2asset: aid,
+    opened_on: document.getElementById('maint-date').value,
+    notes: document.getElementById('maint-notes').value,
+    cost: document.getElementById('maint-cost').value||null,
+    status: document.getElementById('maint-status').value,
+  };
+  try {
+    const r=await fetch(`${API}/api/maintenance`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const d=await r.json(); if(!r.ok) throw new Error(d.error||'Error');
+    toast('Maintenance record added!'); closeMaintModal(); openPanel(aid);
+  } catch(er){ toast(er.message,false); }
+}
+
+// Close modals on backdrop click
+['asset-modal','alloc-modal','maint-modal','delete-modal'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',function(e){ if(e.target===this) this.classList.add('hidden'); });
+});
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AssetPulse — Vendors</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary":"#003c90","error":"#ba1a1a","secondary":"#545f73","on-surface":"#191c1e"},fontFamily:{sans:["Inter"]}}}}</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+body{font-family:'Inter',sans-serif}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body class="bg-[#f7f9fb] text-[#191c1e]">
+
+<!-- Sidebar -->
+<aside class="fixed left-0 top-0 h-screen w-[260px] bg-slate-900 border-r border-slate-800 shadow-xl flex flex-col py-6 z-50">
+  <div class="px-6 mb-8 flex items-center gap-3">
+    <div class="w-8 h-8 rounded bg-blue-600 flex items-center justify-center"><span class="material-symbols-outlined text-white text-lg">inventory_2</span></div>
+    <div><h1 class="text-xl font-bold text-white">AssetPulse</h1><p class="text-[10px] text-slate-400 uppercase tracking-widest">Enterprise ITAM</p></div>
+  </div>
+  <nav class="flex-1 space-y-1 px-3">
+    <a href="/"               class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+    <a href="/assets"         class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">inventory_2</span>Assets</a>
+    <a href="/vendors"        class="bg-blue-600/10 text-blue-400 border-l-4 border-blue-600 flex items-center gap-3 px-4 py-3 rounded-r text-sm font-medium"><span class="material-symbols-outlined">store</span>Vendors</a>
+    <a href="/purchase-orders"class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">shopping_cart</span>Purchase Orders</a>
+    <a href="/employees"      class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">badge</span>Employees</a>
+  </nav>
+</aside>
+
+<!-- Topbar -->
+<header class="fixed top-0 right-0 left-[260px] h-16 border-b border-slate-200 bg-white/90 backdrop-blur-md shadow-sm flex items-center justify-between px-8 z-40">
+  <div class="flex items-center gap-4 flex-1 max-w-lg">
+    <div class="relative w-full">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+      <input id="search-input" type="text" placeholder="Search vendors..." class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+    </div>
+  </div>
+  <div class="flex items-center gap-3">
+    <span class="text-xs text-slate-500 font-medium">Admin User</span>
+    <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">A</div>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="ml-[260px] pt-16 min-h-screen">
+<div class="p-8">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-semibold text-[#191c1e]">Vendors</h1>
+      <p class="text-sm text-[#545f73] mt-1">Manage your supplier and vendor relationships</p>
+    </div>
+    <button onclick="openAddModal()" class="bg-[#003c90] text-white px-5 py-2.5 rounded-lg flex items-center gap-2 text-sm font-medium shadow-md hover:brightness-110 transition-all">
+      <span class="material-symbols-outlined text-lg">add</span>Add New Vendor
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <p class="text-xs font-medium text-[#545f73] uppercase tracking-wide mb-1">Total Vendors</p>
+      <div class="flex items-end justify-between"><h3 id="stat-total" class="text-3xl font-semibold text-[#191c1e]">—</h3><span class="material-symbols-outlined text-blue-600">store</span></div>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <p class="text-xs font-medium text-[#545f73] uppercase tracking-wide mb-1">Vendors with Email</p>
+      <div class="flex items-end justify-between"><h3 id="stat-email" class="text-3xl font-semibold text-[#191c1e]">—</h3><span class="material-symbols-outlined text-emerald-600">email</span></div>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <p class="text-xs font-medium text-[#545f73] uppercase tracking-wide mb-1">Vendors with GST</p>
+      <div class="flex items-end justify-between"><h3 id="stat-gst" class="text-3xl font-semibold text-[#191c1e]">—</h3><span class="material-symbols-outlined text-amber-600">receipt</span></div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+      <h3 class="text-lg font-semibold text-[#191c1e]">Vendor List</h3>
+      <span id="vendor-count" class="text-xs text-slate-500"></span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="bg-slate-50 border-b border-slate-200">
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Vendor</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">GST No</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Email</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Primary Address</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="vendors-body" class="divide-y divide-slate-100">
+          <tr><td colspan="5" class="px-6 py-10 text-center text-slate-400 text-sm">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="px-6 py-4 bg-slate-50/50 border-t border-slate-100">
+      <p id="vendor-count-footer" class="text-xs text-slate-500"></p>
+    </div>
+  </div>
+</div>
+</main>
+
+<!-- Add/Edit Vendor Modal -->
+<div id="vendor-modal" class="modal-backdrop hidden">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4">
+    <div class="flex items-center justify-between p-6 border-b border-slate-100">
+      <h3 id="modal-title" class="text-lg font-semibold">Add New Vendor</h3>
+      <button onclick="closeModal()" class="p-2 hover:bg-slate-100 rounded-full"><span class="material-symbols-outlined text-slate-500">close</span></button>
+    </div>
+    <form id="vendor-form" class="p-6 space-y-4" onsubmit="submitVendor(event)">
+      <input type="hidden" id="vendor-id"/>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Vendor Name <span class="text-red-500">*</span></label>
+        <input id="f-vendor_name" type="text" required placeholder="Supplier name" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">GST No</label>
+        <input id="f-gst_no" type="text" placeholder="33AAAAA1234A1Z5" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+        <input id="f-vendor_email" type="email" placeholder="vendor@email.com" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+      </div>
+      <div class="flex items-start gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-xs text-slate-500">
+        <span class="material-symbols-outlined text-slate-400 text-sm mt-0.5">info</span>
+        Phone numbers for vendors are not stored in the current schema (<code>vendor_phone_map</code> table does not exist). Contact vendors via email.
+      </div>
+      <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+        <button type="button" onclick="closeModal()" class="px-5 py-2.5 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Cancel</button>
+        <button type="submit" class="px-5 py-2.5 bg-[#003c90] text-white rounded-lg text-sm font-medium hover:brightness-110 shadow-md">Save Vendor</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirm -->
+<div id="delete-modal" class="modal-backdrop hidden">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm mx-4 p-6 text-center">
+    <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4"><span class="material-symbols-outlined text-red-600 text-2xl">delete</span></div>
+    <h3 class="text-lg font-semibold text-[#191c1e] mb-2">Delete Vendor?</h3>
+    <p class="text-sm text-slate-500 mb-6">This action is permanent and cannot be undone.</p>
+    <div class="flex gap-3 justify-center">
+      <button onclick="closeDeleteModal()" class="px-5 py-2.5 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Cancel</button>
+      <button id="confirm-delete-btn" class="px-5 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 shadow-md">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 z-[200] hidden">
+  <div id="toast-inner" class="px-5 py-3 rounded-xl shadow-xl text-white text-sm font-medium"></div>
+</div>
+
+<script>
+const API = 'http://localhost:8080';
+
+function toast(msg, ok=true){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-inner').textContent=msg;
+  document.getElementById('toast-inner').className=`px-5 py-3 rounded-xl shadow-xl text-white text-sm font-medium ${ok?'bg-green-600':'bg-red-600'}`;
+  t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'),3000);
+}
+
+function initials(name){ return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
+const COLORS = ['bg-blue-100 text-blue-700','bg-purple-100 text-purple-700','bg-emerald-100 text-emerald-700','bg-amber-100 text-amber-700','bg-rose-100 text-rose-700'];
+
+async function loadVendors(){
+  const search = document.getElementById('search-input').value;
+  const tbody = document.getElementById('vendors-body');
+  tbody.innerHTML='<tr><td colspan="5" class="px-6 py-10 text-center text-slate-400 text-sm">Loading...</td></tr>';
+  try {
+    const data = await fetch(`${API}/api/vendors?search=${encodeURIComponent(search)}`).then(r=>r.json());
+    document.getElementById('vendor-count').textContent = `${data.length} vendor${data.length!==1?'s':''}`;
+    document.getElementById('vendor-count-footer').textContent = `Showing ${data.length} vendor${data.length!==1?'s':''}`;
+    document.getElementById('stat-total').textContent = data.length;
+    document.getElementById('stat-email').textContent = data.filter(v=>v.vendor_email).length;
+    document.getElementById('stat-gst').textContent   = data.filter(v=>v.gst_no).length;
+
+    if(data.length===0){
+      tbody.innerHTML='<tr><td colspan="5" class="px-6 py-10 text-center text-slate-400 text-sm">No vendors found.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map((v,i)=>{
+      const bg = COLORS[i%COLORS.length];
+      const abbr = initials(v.vendor_name);
+      return `<tr class="hover:bg-slate-50 transition-colors group">
+        <td class="px-6 py-4">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg ${bg} flex items-center justify-center text-xs font-bold flex-shrink-0">${abbr}</div>
+            <span class="text-sm font-semibold text-[#191c1e]">${v.vendor_name}</span>
+          </div>
+        </td>
+        <td class="px-6 py-4 text-sm font-mono text-slate-600">${v.gst_no||'—'}</td>
+        <td class="px-6 py-4 text-sm text-blue-600">${v.vendor_email?`<a href="mailto:${v.vendor_email}" class="hover:underline">${v.vendor_email}</a>`:'—'}</td>
+        <td class="px-6 py-4 text-sm text-slate-500 max-w-[200px] truncate">${v.address||'—'}</td>
+        <td class="px-6 py-4 text-right">
+          <div class="flex justify-end gap-2">
+            <button onclick="openEditModal(${JSON.stringify(v).replace(/"/g,'&quot;')})" class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+            <button onclick="openDeleteModal(${v.internal_id})" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-all"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  } catch(e){ toast('Failed to load vendors: '+e.message, false); }
+}
+
+document.getElementById('search-input').addEventListener('input',()=>{ clearTimeout(window._st); window._st=setTimeout(loadVendors,350); });
+
+// ─── Modal ──────────────────────────────────────────────────────────────────
+function openAddModal(){
+  document.getElementById('modal-title').textContent='Add New Vendor';
+  document.getElementById('vendor-id').value='';
+  document.getElementById('vendor-form').reset();
+  document.getElementById('vendor-modal').classList.remove('hidden');
+}
+function openEditModal(v){
+  document.getElementById('modal-title').textContent='Edit Vendor';
+  document.getElementById('vendor-id').value=v.internal_id;
+  document.getElementById('f-vendor_name').value=v.vendor_name||'';
+  document.getElementById('f-gst_no').value=v.gst_no||'';
+  document.getElementById('f-vendor_email').value=v.vendor_email||'';
+  document.getElementById('vendor-modal').classList.remove('hidden');
+}
+function closeModal(){ document.getElementById('vendor-modal').classList.add('hidden'); }
+
+async function submitVendor(e){
+  e.preventDefault();
+  const id=document.getElementById('vendor-id').value;
+  const payload={
+    vendor_name: document.getElementById('f-vendor_name').value,
+    gst_no: document.getElementById('f-gst_no').value||null,
+    vendor_email: document.getElementById('f-vendor_email').value||null,
+  };
+  try {
+    const r=await fetch(`${API}/api/vendors${id?'/'+id:''}`,{method:id?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const d=await r.json(); if(!r.ok) throw new Error(d.error||'Error');
+    toast(id?'Vendor updated!':'Vendor created!'); closeModal(); loadVendors();
+  } catch(er){ toast(er.message,false); }
+}
+
+// ─── Delete ──────────────────────────────────────────────────────────────────
+let _delId=null;
+function openDeleteModal(id){ _delId=id; document.getElementById('delete-modal').classList.remove('hidden'); }
+function closeDeleteModal(){ document.getElementById('delete-modal').classList.add('hidden'); _delId=null; }
+document.getElementById('confirm-delete-btn').onclick = async function(){
+  if(!_delId) return;
+  try {
+    const r=await fetch(`${API}/api/vendors/${_delId}`,{method:'DELETE'});
+    const d=await r.json(); if(!r.ok) throw new Error(d.error||'Error');
+    toast('Vendor deleted!'); closeDeleteModal(); loadVendors();
+  } catch(er){ toast(er.message,false); closeDeleteModal(); }
+};
+
+['vendor-modal','delete-modal'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',function(e){ if(e.target===this) this.classList.add('hidden'); });
+});
+
+loadVendors();
+</script>
+</body>
+</html>

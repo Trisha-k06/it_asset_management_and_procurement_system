@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AssetPulse — Purchase Orders</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary":"#003c90","error":"#ba1a1a","secondary":"#545f73"},fontFamily:{sans:["Inter"]}}}}</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+body{font-family:'Inter',sans-serif}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;display:flex;align-items:center;justify-content:center}
+.expandable-row{transition:all 0.2s ease}
+</style>
+</head>
+<body class="bg-[#f7f9fb] text-[#191c1e]">
+
+<!-- Sidebar -->
+<aside class="fixed left-0 top-0 h-screen w-[260px] bg-slate-900 border-r border-slate-800 shadow-xl flex flex-col py-6 z-50">
+  <div class="px-6 mb-8 flex items-center gap-3">
+    <div class="w-8 h-8 rounded bg-blue-600 flex items-center justify-center"><span class="material-symbols-outlined text-white text-lg">inventory_2</span></div>
+    <div><h1 class="text-xl font-bold text-white">AssetPulse</h1><p class="text-[10px] text-slate-400 uppercase tracking-widest">Enterprise ITAM</p></div>
+  </div>
+  <nav class="flex-1 space-y-1 px-3">
+    <a href="/"               class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+    <a href="/assets"         class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">inventory_2</span>Assets</a>
+    <a href="/vendors"        class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">store</span>Vendors</a>
+    <a href="/purchase-orders"class="bg-blue-600/10 text-blue-400 border-l-4 border-blue-600 flex items-center gap-3 px-4 py-3 rounded-r text-sm font-medium"><span class="material-symbols-outlined">shopping_cart</span>Purchase Orders</a>
+    <a href="/employees"      class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">badge</span>Employees</a>
+  </nav>
+</aside>
+
+<!-- Topbar -->
+<header class="fixed top-0 right-0 left-[260px] h-16 border-b border-slate-200 bg-white/90 backdrop-blur-md shadow-sm flex items-center justify-between px-8 z-40">
+  <div class="flex items-center gap-4 flex-1 max-w-lg">
+    <div class="relative w-full">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+      <input id="search-input" type="text" placeholder="Search PO number or vendor..." class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+    </div>
+  </div>
+  <div class="flex items-center gap-3">
+    <span class="text-xs text-slate-500 font-medium">Admin User</span>
+    <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">A</div>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="ml-[260px] pt-16 min-h-screen">
+<div class="p-8">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-semibold text-[#191c1e]">Purchase Orders</h1>
+      <p class="text-sm text-[#545f73] mt-1">Manage procurement and goods receipts</p>
+    </div>
+    <button onclick="openAddModal()" class="bg-[#003c90] text-white px-5 py-2.5 rounded-lg flex items-center gap-2 text-sm font-medium shadow-md hover:brightness-110 transition-all">
+      <span class="material-symbols-outlined text-lg">add</span>New PO
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-4 gap-4 mb-6" id="stats-row">
+    <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+      <p class="text-xs text-slate-500 uppercase tracking-wide font-medium">Total POs</p>
+      <p class="text-2xl font-bold text-[#003c90] mt-1" id="stat-total">—</p>
+    </div>
+    <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+      <p class="text-xs text-slate-500 uppercase tracking-wide font-medium">Pending</p>
+      <p class="text-2xl font-bold text-amber-600 mt-1" id="stat-pending">—</p>
+    </div>
+    <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+      <p class="text-xs text-slate-500 uppercase tracking-wide font-medium">Fully Received</p>
+      <p class="text-2xl font-bold text-green-600 mt-1" id="stat-received">—</p>
+    </div>
+    <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+      <p class="text-xs text-slate-500 uppercase tracking-wide font-medium">Cancelled</p>
+      <p class="text-2xl font-bold text-red-600 mt-1" id="stat-cancelled">—</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex items-center gap-3 mb-4">
+    <select id="filter-status" onchange="applyFilters()" class="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+      <option value="">All Statuses</option>
+      <option value="PENDING">Pending</option>
+      <option value="FULLY_RECEIVED">Fully Received</option>
+      <option value="CANCELLED">Cancelled</option>
+    </select>
+    <select id="filter-vendor" onchange="applyFilters()" class="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+      <option value="">All Vendors</option>
+    </select>
+    <span class="text-xs text-slate-400" id="result-count"></span>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-slate-50 border-b border-slate-200">
+        <tr>
+          <th class="w-8 px-4 py-3"></th>
+          <th class="text-left px-4 py-3 font-semibold text-slate-600">PO Number</th>
+          <th class="text-left px-4 py-3 font-semibold text-slate-600">Vendor</th>
+          <th class="text-left px-4 py-3 font-semibold text-slate-600">Date</th>
+          <th class="text-left px-4 py-3 font-semibold text-slate-600">Status</th>
+          <th class="text-right px-4 py-3 font-semibold text-slate-600">Total Amount</th>
+          <th class="px-4 py-3"></th>
+        </tr>
+      </thead>
+      <tbody id="po-tbody">
+        <tr><td colspan="7" class="text-center py-12 text-slate-400"><div class="flex flex-col items-center gap-2"><span class="material-symbols-outlined text-4xl">hourglass_empty</span>Loading…</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</main>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 z-[200] hidden">
+  <div id="toast-inner" class="flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl text-sm font-medium text-white"></div>
+</div>
+
+<!-- ───────────────── ADD PO MODAL ───────────────── -->
+<div id="add-modal" class="modal-backdrop hidden" onclick="if(event.target===this)closeModal('add-modal')">
+<div class="bg-white rounded-2xl shadow-2xl w-[700px] max-h-[90vh] overflow-y-auto p-8">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-xl font-semibold">New Purchase Order</h2>
+    <button onclick="closeModal('add-modal')" class="text-slate-400 hover:text-slate-700"><span class="material-symbols-outlined">close</span></button>
+  </div>
+  <form id="add-form" onsubmit="submitAddPO(event)">
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">PO Number <span class="text-red-500">*</span></label>
+        <input name="po_number" required placeholder="e.g. PO3001" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">PO Date</label>
+        <input name="po_date" type="date" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">Vendor <span class="text-red-500">*</span></label>
+        <select name="thisobject2vendor" required id="add-vendor-sel" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          <option value="">Select vendor…</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">Status</label>
+        <select name="status" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          <option value="PENDING">Pending</option>
+          <option value="FULLY_RECEIVED">Fully Received</option>
+          <option value="CANCELLED">Cancelled</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Line Items -->
+    <div class="mb-4">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-sm font-semibold text-slate-700">Line Items</h3>
+        <button type="button" onclick="addLineItem()" class="text-xs text-blue-600 hover:underline flex items-center gap-1"><span class="material-symbols-outlined text-sm">add_circle</span>Add Item</button>
+      </div>
+      <div id="line-items-container" class="space-y-3"></div>
+    </div>
+
+    <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+      <div class="text-sm font-semibold text-slate-700">Computed Total: <span id="computed-total" class="text-blue-700">₹ 0.00</span></div>
+      <div class="flex gap-3">
+        <button type="button" onclick="closeModal('add-modal')" class="px-5 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50">Cancel</button>
+        <button type="submit" class="px-5 py-2 rounded-lg bg-[#003c90] text-white text-sm font-medium hover:brightness-110">Create PO</button>
+      </div>
+    </div>
+  </form>
+</div>
+</div>
+
+<!-- ───────────────── EDIT PO MODAL ───────────────── -->
+<div id="edit-modal" class="modal-backdrop hidden" onclick="if(event.target===this)closeModal('edit-modal')">
+<div class="bg-white rounded-2xl shadow-2xl w-[400px] p-8">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-xl font-semibold">Edit Purchase Order</h2>
+    <button onclick="closeModal('edit-modal')" class="text-slate-400 hover:text-slate-700"><span class="material-symbols-outlined">close</span></button>
+  </div>
+  <form id="edit-form" onsubmit="submitEditPO(event)">
+    <input type="hidden" id="edit-po-id"/>
+    <div class="mb-4">
+      <label class="block text-xs font-medium text-slate-600 mb-1">PO Number</label>
+      <input id="edit-po-number" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-slate-50" readonly/>
+    </div>
+    <div class="mb-4">
+      <label class="block text-xs font-medium text-slate-600 mb-1">Vendor</label>
+      <input id="edit-vendor-name" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-slate-50" readonly/>
+    </div>
+    <div class="mb-6">
+      <label class="block text-xs font-medium text-slate-600 mb-1">Status</label>
+      <select id="edit-status" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        <option value="PENDING">Pending</option>
+        <option value="FULLY_RECEIVED">Fully Received</option>
+        <option value="CANCELLED">Cancelled</option>
+      </select>
+    </div>
+    <div class="flex gap-3 justify-end">
+      <button type="button" onclick="closeModal('edit-modal')" class="px-5 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50">Cancel</button>
+      <button type="submit" class="px-5 py-2 rounded-lg bg-[#003c90] text-white text-sm font-medium hover:brightness-110">Save</button>
+    </div>
+  </form>
+</div>
+</div>
+
+<!-- ───────────────── GOODS RECEIPT MODAL ───────────────── -->
+<div id="grn-modal" class="modal-backdrop hidden" onclick="if(event.target===this)closeModal('grn-modal')">
+<div class="bg-white rounded-2xl shadow-2xl w-[620px] max-h-[90vh] overflow-y-auto p-8">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h2 class="text-xl font-semibold">Goods Receipt</h2>
+      <p class="text-xs text-slate-500 mt-0.5" id="grn-po-label"></p>
+    </div>
+    <button onclick="closeModal('grn-modal')" class="text-slate-400 hover:text-slate-700"><span class="material-symbols-outlined">close</span></button>
+  </div>
+  <form id="grn-form" onsubmit="submitGRN(event)">
+    <input type="hidden" id="grn-po-id"/>
+    <div class="mb-5">
+      <label class="block text-xs font-medium text-slate-600 mb-1">Received Date</label>
+      <input id="grn-date" type="date" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+    </div>
+    <h3 class="text-sm font-semibold text-slate-700 mb-3">Line Items</h3>
+    <div id="grn-lines" class="space-y-3 mb-6"></div>
+    <div class="flex gap-3 justify-end">
+      <button type="button" onclick="closeModal('grn-modal')" class="px-5 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50">Cancel</button>
+      <button type="submit" class="px-5 py-2 rounded-lg bg-green-600 text-white text-sm font-medium hover:brightness-110">Submit Receipt</button>
+    </div>
+  </form>
+</div>
+</div>
+
+<!-- ───────────────── DELETE MODAL ───────────────── -->
+<div id="delete-modal" class="modal-backdrop hidden" onclick="if(event.target===this)closeModal('delete-modal')">
+<div class="bg-white rounded-2xl shadow-2xl w-[400px] p-8 text-center">
+  <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+    <span class="material-symbols-outlined text-red-500 text-3xl">delete_forever</span>
+  </div>
+  <h2 class="text-lg font-semibold mb-2">Delete Purchase Order?</h2>
+  <p class="text-sm text-slate-500 mb-6">This will permanently delete <strong id="delete-po-num"></strong> and all its line items and receipts.</p>
+  <input type="hidden" id="delete-po-id"/>
+  <div class="flex gap-3 justify-center">
+    <button onclick="closeModal('delete-modal')" class="px-5 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50">Cancel</button>
+    <button onclick="confirmDelete()" class="px-5 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:brightness-110">Delete</button>
+  </div>
+</div>
+</div>
+
+<!-- ───────────────── EXPAND LINE ITEMS PANEL ───────────────── -->
+<div id="expand-modal" class="modal-backdrop hidden" onclick="if(event.target===this)closeModal('expand-modal')">
+<div class="bg-white rounded-2xl shadow-2xl w-[640px] max-h-[85vh] overflow-y-auto p-8">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h2 class="text-xl font-semibold" id="expand-po-num"></h2>
+      <p class="text-xs text-slate-500 mt-0.5" id="expand-vendor"></p>
+    </div>
+    <button onclick="closeModal('expand-modal')" class="text-slate-400 hover:text-slate-700"><span class="material-symbols-outlined">close</span></button>
+  </div>
+  <div id="expand-content"></div>
+</div>
+</div>
+
+<script>
+const BASE = 'http://localhost:8080';
+const STATUS_CFG = {
+  PENDING:        { bg: 'bg-amber-100',  text: 'text-amber-700',  label: 'Pending' },
+  FULLY_RECEIVED: { bg: 'bg-green-100',  text: 'text-green-700',  label: 'Fully Received' },
+  CANCELLED:      { bg: 'bg-red-100',    text: 'text-red-700',    label: 'Cancelled' },
+};
+
+let allPOs = [];
+let vendors = [];
+
+async function init() {
+  const [pos, vens] = await Promise.all([
+    fetch(`${BASE}/api/purchase-orders`).then(r => r.json()),
+    fetch(`${BASE}/api/vendors`).then(r => r.json())
+  ]);
+  allPOs = Array.isArray(pos) ? pos : [];
+  vendors = Array.isArray(vens) ? vens : [];
+  populateVendorFilter();
+  populateVendorSel();
+  updateStats();
+  renderTable(allPOs);
+  setupSearch();
+}
+
+function populateVendorFilter() {
+  const sel = document.getElementById('filter-vendor');
+  vendors.forEach(v => {
+    const o = document.createElement('option');
+    o.value = v.internal_id; o.textContent = v.vendor_name;
+    sel.appendChild(o);
+  });
+}
+
+function populateVendorSel() {
+  const sel = document.getElementById('add-vendor-sel');
+  vendors.forEach(v => {
+    const o = document.createElement('option');
+    o.value = v.internal_id; o.textContent = v.vendor_name;
+    sel.appendChild(o);
+  });
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = allPOs.length;
+  document.getElementById('stat-pending').textContent = allPOs.filter(p => p.status === 'PENDING').length;
+  document.getElementById('stat-received').textContent = allPOs.filter(p => p.status === 'FULLY_RECEIVED').length;
+  document.getElementById('stat-cancelled').textContent = allPOs.filter(p => p.status === 'CANCELLED').length;
+}
+
+function badge(status) {
+  const c = STATUS_CFG[status] || { bg: 'bg-slate-100', text: 'text-slate-600', label: status };
+  return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${c.bg} ${c.text}">${c.label}</span>`;
+}
+
+function fmt(n) {
+  if (n == null) return '—';
+  return '₹ ' + Number(n).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById('po-tbody');
+  document.getElementById('result-count').textContent = `${data.length} result${data.length !== 1 ? 's' : ''}`;
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-12 text-slate-400"><div class="flex flex-col items-center gap-2"><span class="material-symbols-outlined text-4xl">receipt_long</span>No purchase orders found</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map(po => `
+    <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+      <td class="px-4 py-3">
+        <button onclick="openExpand(${po.internal_id})" class="text-slate-400 hover:text-blue-600 transition-colors" title="View line items">
+          <span class="material-symbols-outlined text-lg">expand_circle_down</span>
+        </button>
+      </td>
+      <td class="px-4 py-3">
+        <span class="font-semibold text-[#003c90]">${po.po_number}</span>
+      </td>
+      <td class="px-4 py-3 text-slate-700">${po.vendor_name}</td>
+      <td class="px-4 py-3 text-slate-500 text-xs">${po.po_date || '—'}</td>
+      <td class="px-4 py-3">${badge(po.status)}</td>
+      <td class="px-4 py-3 text-right font-semibold text-slate-800">${fmt(po.total_amount)}</td>
+      <td class="px-4 py-3">
+        <div class="flex items-center justify-end gap-1">
+          ${po.status === 'PENDING' ? `<button onclick="openGRNModal(${po.internal_id},'${po.po_number}')" title="Goods Receipt" class="p-1.5 rounded hover:bg-green-50 text-green-600 transition-colors"><span class="material-symbols-outlined text-base">local_shipping</span></button>` : ''}
+          <button onclick="openEditModal(${po.internal_id},'${po.po_number}','${po.vendor_name}','${po.status}')" title="Edit" class="p-1.5 rounded hover:bg-blue-50 text-blue-600 transition-colors"><span class="material-symbols-outlined text-base">edit</span></button>
+          <button onclick="openDeleteModal(${po.internal_id},'${po.po_number}')" title="Delete" class="p-1.5 rounded hover:bg-red-50 text-red-500 transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function applyFilters() {
+  const status = document.getElementById('filter-status').value;
+  const vendorId = document.getElementById('filter-vendor').value;
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  let data = allPOs.filter(po => {
+    if (status && po.status !== status) return false;
+    if (vendorId && String(po.vendor_id) !== vendorId) return false;
+    if (q && !po.po_number.toLowerCase().includes(q) && !po.vendor_name.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  renderTable(data);
+}
+
+function setupSearch() {
+  document.getElementById('search-input').addEventListener('input', applyFilters);
+}
+
+// ─── EXPAND modal ───
+async function openExpand(poId) {
+  const po = await fetch(`${BASE}/api/purchase-orders/${poId}`).then(r => r.json());
+  document.getElementById('expand-po-num').textContent = po.po_number;
+  document.getElementById('expand-vendor').textContent = `${po.vendor_name} · ${po.po_date || ''} · ${(STATUS_CFG[po.status]||{label:po.status}).label}`;
+  const lines = po.details || [];
+  document.getElementById('expand-content').innerHTML = `
+    <div class="mb-3 text-xs text-slate-500 uppercase tracking-wide font-semibold">Line Items (${lines.length})</div>
+    ${lines.length ? `
+    <table class="w-full text-sm border border-slate-100 rounded-lg overflow-hidden">
+      <thead class="bg-slate-50 border-b border-slate-200">
+        <tr>
+          <th class="text-left px-4 py-2 font-semibold text-slate-600">Description</th>
+          <th class="text-right px-4 py-2 font-semibold text-slate-600">Qty</th>
+          <th class="text-right px-4 py-2 font-semibold text-slate-600">Unit Price</th>
+          <th class="text-right px-4 py-2 font-semibold text-slate-600">GST</th>
+          <th class="text-right px-4 py-2 font-semibold text-slate-600">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${lines.map(l => `
+        <tr class="border-b border-slate-50">
+          <td class="px-4 py-2">${l.item_description || '—'}</td>
+          <td class="px-4 py-2 text-right">${l.quantity ?? '—'}</td>
+          <td class="px-4 py-2 text-right">${fmt(l.unit_price)}</td>
+          <td class="px-4 py-2 text-right">${fmt(l.gst_amount)}</td>
+          <td class="px-4 py-2 text-right font-semibold">${fmt(l.total_price)}</td>
+        </tr>`).join('')}
+      </tbody>
+      <tfoot class="bg-slate-50 border-t-2 border-slate-200">
+        <tr>
+          <td colspan="4" class="px-4 py-2 text-right font-semibold text-slate-700">Grand Total</td>
+          <td class="px-4 py-2 text-right font-bold text-[#003c90]">${fmt(po.total_amount)}</td>
+        </tr>
+      </tfoot>
+    </table>` : '<p class="text-sm text-slate-400">No line items found.</p>'}
+  `;
+  openModal('expand-modal');
+}
+
+// ─── ADD PO ───
+let lineItemCount = 0;
+
+function openAddModal() {
+  document.getElementById('add-form').reset();
+  document.getElementById('line-items-container').innerHTML = '';
+  document.getElementById('computed-total').textContent = '₹ 0.00';
+  lineItemCount = 0;
+  addLineItem();
+  openModal('add-modal');
+}
+
+function addLineItem() {
+  lineItemCount++;
+  const id = lineItemCount;
+  const div = document.createElement('div');
+  div.id = `line-${id}`;
+  div.className = 'grid grid-cols-12 gap-2 items-end bg-slate-50 rounded-lg p-3 border border-slate-200';
+  div.innerHTML = `
+    <div class="col-span-4">
+      <label class="block text-xs font-medium text-slate-500 mb-1">Description</label>
+      <input type="text" name="item_description_${id}" placeholder="Item name" class="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-white" oninput="computeTotal()"/>
+    </div>
+    <div class="col-span-2">
+      <label class="block text-xs font-medium text-slate-500 mb-1">Qty</label>
+      <input type="number" name="quantity_${id}" min="1" value="1" class="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-white" oninput="computeTotal()"/>
+    </div>
+    <div class="col-span-2">
+      <label class="block text-xs font-medium text-slate-500 mb-1">Unit Price</label>
+      <input type="number" name="unit_price_${id}" min="0" step="0.01" placeholder="0.00" class="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-white" oninput="computeTotal()"/>
+    </div>
+    <div class="col-span-2">
+      <label class="block text-xs font-medium text-slate-500 mb-1">GST Amount</label>
+      <input type="number" name="gst_amount_${id}" min="0" step="0.01" placeholder="0.00" class="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-white" oninput="computeTotal()"/>
+    </div>
+    <div class="col-span-1">
+      <label class="block text-xs font-medium text-slate-500 mb-1">GST %</label>
+      <input type="number" name="gst_percent_${id}" min="0" max="100" step="0.1" placeholder="18" class="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-white"/>
+    </div>
+    <div class="col-span-1 flex justify-center pb-0.5">
+      <button type="button" onclick="removeLineItem(${id})" class="text-red-400 hover:text-red-600"><span class="material-symbols-outlined text-lg">remove_circle</span></button>
+    </div>
+  `;
+  document.getElementById('line-items-container').appendChild(div);
+  computeTotal();
+}
+
+function removeLineItem(id) {
+  const el = document.getElementById(`line-${id}`);
+  if (el) el.remove();
+  computeTotal();
+}
+
+function computeTotal() {
+  const container = document.getElementById('line-items-container');
+  const items = container.querySelectorAll('[id^="line-"]');
+  let total = 0;
+  items.forEach(item => {
+    const id = item.id.replace('line-', '');
+    const qty = parseFloat(item.querySelector(`[name="quantity_${id}"]`)?.value || 0);
+    const up  = parseFloat(item.querySelector(`[name="unit_price_${id}"]`)?.value || 0);
+    const gst = parseFloat(item.querySelector(`[name="gst_amount_${id}"]`)?.value || 0);
+    total += (qty * up) + gst;
+  });
+  document.getElementById('computed-total').textContent = '₹ ' + total.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+}
+
+async function submitAddPO(e) {
+  e.preventDefault();
+  const form = e.target;
+  const fd = new FormData(form);
+
+  const container = document.getElementById('line-items-container');
+  const itemEls = container.querySelectorAll('[id^="line-"]');
+  const details = [];
+  itemEls.forEach(item => {
+    const id = item.id.replace('line-', '');
+    details.push({
+      item_description: form.querySelector(`[name="item_description_${id}"]`)?.value || '',
+      quantity:   parseFloat(form.querySelector(`[name="quantity_${id}"]`)?.value || 0),
+      unit_price: parseFloat(form.querySelector(`[name="unit_price_${id}"]`)?.value || 0),
+      gst_amount: parseFloat(form.querySelector(`[name="gst_amount_${id}"]`)?.value || 0),
+      gst_percent: form.querySelector(`[name="gst_percent_${id}"]`)?.value || null
+    });
+  });
+
+  const payload = {
+    po_number: fd.get('po_number'),
+    po_date:   fd.get('po_date') || null,
+    status:    fd.get('status'),
+    thisobject2vendor: parseInt(fd.get('thisobject2vendor')),
+    details
+  };
+
+  const res = await fetch(`${BASE}/api/purchase-orders`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+  if (!res.ok) { showToast(data.error || 'Failed to create PO', 'error'); return; }
+  showToast('Purchase order created!', 'success');
+  closeModal('add-modal');
+  reload();
+}
+
+// ─── EDIT PO ───
+function openEditModal(id, poNum, vendorName, status) {
+  document.getElementById('edit-po-id').value = id;
+  document.getElementById('edit-po-number').value = poNum;
+  document.getElementById('edit-vendor-name').value = vendorName;
+  document.getElementById('edit-status').value = status;
+  openModal('edit-modal');
+}
+
+async function submitEditPO(e) {
+  e.preventDefault();
+  const id = document.getElementById('edit-po-id').value;
+  const status = document.getElementById('edit-status').value;
+  const res = await fetch(`${BASE}/api/purchase-orders/${id}`, {
+    method: 'PUT', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status })
+  });
+  const data = await res.json();
+  if (!res.ok) { showToast(data.error || 'Failed to update PO', 'error'); return; }
+  showToast('PO updated!', 'success');
+  closeModal('edit-modal');
+  reload();
+}
+
+// ─── DELETE PO ───
+function openDeleteModal(id, poNum) {
+  document.getElementById('delete-po-id').value = id;
+  document.getElementById('delete-po-num').textContent = poNum;
+  openModal('delete-modal');
+}
+
+async function confirmDelete() {
+  const id = document.getElementById('delete-po-id').value;
+  const res = await fetch(`${BASE}/api/purchase-orders/${id}`, { method: 'DELETE' });
+  const data = await res.json();
+  if (!res.ok) { showToast(data.error || 'Failed to delete PO', 'error'); return; }
+  showToast('PO deleted', 'success');
+  closeModal('delete-modal');
+  reload();
+}
+
+// ─── GRN MODAL ───
+async function openGRNModal(poId, poNum) {
+  document.getElementById('grn-po-id').value = poId;
+  document.getElementById('grn-po-label').textContent = poNum;
+  document.getElementById('grn-date').value = new Date().toISOString().split('T')[0];
+
+  const po = await fetch(`${BASE}/api/purchase-orders/${poId}`).then(r => r.json());
+  const lines = po.details || [];
+  document.getElementById('grn-lines').innerHTML = lines.map(l => `
+    <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm font-medium">${l.item_description || '—'}</span>
+        <span class="text-xs text-slate-500">Ordered: ${l.quantity}</span>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-500 mb-1">Qty Received</label>
+          <input type="number" name="qty_${l.internal_id}" min="0" max="${l.quantity}" value="${l.quantity}" class="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-white"/>
+          <input type="hidden" name="line_id_${l.internal_id}" value="${l.internal_id}"/>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-500 mb-1">Remarks</label>
+          <input type="text" name="remarks_${l.internal_id}" placeholder="Optional" class="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-white"/>
+        </div>
+      </div>
+    </div>
+  `).join('') || '<p class="text-sm text-slate-400">No line items on this PO.</p>';
+
+  openModal('grn-modal');
+}
+
+async function submitGRN(e) {
+  e.preventDefault();
+  const poId = document.getElementById('grn-po-id').value;
+  const receivedDate = document.getElementById('grn-date').value;
+  const form = e.target;
+
+  const po = await fetch(`${BASE}/api/purchase-orders/${poId}`).then(r => r.json());
+  const lines = po.details || [];
+  const items = lines.map(l => ({
+    thisobject2podetail: l.internal_id,
+    qty_received: parseFloat(form.querySelector(`[name="qty_${l.internal_id}"]`)?.value || 0),
+    remarks: form.querySelector(`[name="remarks_${l.internal_id}"]`)?.value || ''
+  }));
+
+  const payload = { thisobject2po: parseInt(poId), grn_date: receivedDate, items };
+  const res = await fetch(`${BASE}/api/goods-receipts`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+  if (!res.ok) { showToast(data.error || 'Failed to submit receipt', 'error'); return; }
+  showToast('Goods receipt recorded!', 'success');
+  closeModal('grn-modal');
+  reload();
+}
+
+// ─── Utilities ───
+async function reload() {
+  const pos = await fetch(`${BASE}/api/purchase-orders`).then(r => r.json());
+  allPOs = Array.isArray(pos) ? pos : [];
+  updateStats();
+  applyFilters();
+}
+
+function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  const inner = document.getElementById('toast-inner');
+  inner.className = `flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl text-sm font-medium text-white ${type === 'success' ? 'bg-green-600' : 'bg-red-600'}`;
+  inner.innerHTML = `<span class="material-symbols-outlined text-lg">${type === 'success' ? 'check_circle' : 'error'}</span>${msg}`;
+  t.classList.remove('hidden');
+  setTimeout(() => t.classList.add('hidden'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>

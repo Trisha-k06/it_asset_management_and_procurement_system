@@ -1,26 +1,13 @@
--- ============================================================
---  NORMALIZATION WALKTHROUGH
---  IT Asset & Procurement Management System
---  Shows: Unnormalized → 1NF / 2NF / 3NF decomposition + migration
--- ============================================================
+
 
 USE it_asset_mgmt_db;
 
 
--- ============================================================
--- SECTION 1: individual
--- Problem : phone numbers & department stored as extra columns
---           → 1NF violation (repeating phone groups)
---           → Mixed concerns (person identity + contact + assignment)
--- ============================================================
 
--- ──────────────────────────────────────────────────────────
+
 -- 1-A  UNNORMALIZED TABLE
--- ──────────────────────────────────────────────────────────
--- A single flat table tried to store:
---   • up to two phone numbers as separate columns  (repeating group → 1NF violation)
---   • department assignment inline                 (mixing two concerns)
---   • dept_name repeated for every employee        (redundancy → update anomaly)
+
+
 
 CREATE TABLE individual_unnormalized (
     id            INT PRIMARY KEY,
@@ -29,32 +16,30 @@ CREATE TABLE individual_unnormalized (
     email         VARCHAR(100),
     person_type   VARCHAR(50),
     company_id    INT,
-    -- ❌  Repeating phone group — violates 1NF
+    -- Repeating phone group 
     phone1_dial   VARCHAR(10),
     phone1_number VARCHAR(20),
     phone1_type   VARCHAR(20),
-    phone2_dial   VARCHAR(10),    -- NULL when person has only one phone
+    phone2_dial   VARCHAR(10),   
     phone2_number VARCHAR(20),
     phone2_type   VARCHAR(20),
-    -- ❌  Department embedded here — update anomaly if dept is renamed
+    -- update anomaly if dept is renamed
     dept_id       INT,
-    dept_name     VARCHAR(100),   -- repeated for every employee in same dept
+    dept_name     VARCHAR(100),   
     dept_start_date DATE
 );
 
 INSERT INTO individual_unnormalized VALUES
--- Alice has two phones; her dept_name 'Engineering' is stored inline
+
 (1, 'Alice', 'Menon',   'alice@corp.com',   'EMPLOYEE', 10, '+91','9876543210','MOBILE', '+91','08025551234','OFFICE', 2,'Engineering','2023-01-15'),
--- Bob has one phone; dept_name 'Engineering' is duplicated again
+
 (2, 'Bob',   'Sharma',  'bob@corp.com',     'EMPLOYEE', 10, '+91','9123456789','MOBILE', NULL, NULL,         NULL,    2,'Engineering','2022-06-01'),
--- Carol has two phones; in HR dept
+
 (3, 'Carol', 'Nair',    'carol@corp.com',   'EMPLOYEE', 10, '+91','9988776655','MOBILE', '+91','08044441111','OFFICE', 3,'Human Resources','2021-09-10'),
--- Dave is a contractor with no department
+
 (4, 'Dave',  'Pillai',  'dave@vendor.com',  'CONTRACTOR',10,'+91','9000011111','MOBILE', NULL, NULL,         NULL,    NULL, NULL, NULL);
 
--- ══════════════════════════════════════════════════════════
--- VIOLATION ANALYSIS
--- ══════════════════════════════════════════════════════════
+
 -- 1NF violation  : phone1_* and phone2_* are a repeating group.
 --                  Adding a third phone requires ALTER TABLE.
 --                  Querying "all mobile numbers" needs OR across columns.
@@ -66,14 +51,10 @@ INSERT INTO individual_unnormalized VALUES
 --
 -- Deletion anomaly : Deleting Dave's row loses his phone number permanently
 --                    with no way to distinguish "no phone" from "unknown phone".
--- ══════════════════════════════════════════════════════════
 
--- ──────────────────────────────────────────────────────────
--- 1-B  STEP 1 → Achieve 1NF: move phones to own table
--- ──────────────────────────────────────────────────────────
 -- Remove repeating phone columns. Each phone is now one atomic row.
 
--- (phone_number table already exists in our schema — shown here for clarity)
+
 CREATE TABLE phone_number_1nf (
     internal_id       INT AUTO_INCREMENT PRIMARY KEY,
     country_dial_code VARCHAR(10),
@@ -88,13 +69,13 @@ CREATE TABLE individual_1nf (
     email         VARCHAR(100) UNIQUE,
     person_type   VARCHAR(50),
     thisobject2company INT,
-    -- Still has dept inline — will fix in step 2
+ 
     dept_id       INT,
     dept_name     VARCHAR(100),
     dept_start_date DATE
 );
 
--- individual_phone_map_1nf links persons to phones (many-to-many)
+
 CREATE TABLE individual_phone_map_1nf (
     internal_id         INT AUTO_INCREMENT PRIMARY KEY,
     thisobject2individual INT NOT NULL,
@@ -102,16 +83,14 @@ CREATE TABLE individual_phone_map_1nf (
     is_primary            BOOLEAN
 );
 
--- ──────────────────────────────────────────────────────────
--- 1-C  STEP 2 → Achieve 3NF: extract department assignment
+
+--  Achieve 3NF: extract department assignment
 --      dept_name is transitively determined by dept_id (a non-key attribute)
 --      internal_id → dept_id → dept_name   ← 3NF violation
--- ──────────────────────────────────────────────────────────
 
--- Department identity lives in its own table (already exists: `department`)
--- The assignment episode lives in individual_department_map
 
--- Final normalized individual table (matches our actual schema):
+
+
 CREATE TABLE individual_3nf (
     internal_id        INT AUTO_INCREMENT PRIMARY KEY,
     first_name         VARCHAR(100) NOT NULL,
@@ -119,10 +98,10 @@ CREATE TABLE individual_3nf (
     email              VARCHAR(100) UNIQUE,
     person_type        VARCHAR(50),
     thisobject2company INT NOT NULL
-    -- No phones, no department — both live in map tables
+    
 );
 
--- Assignment history (already in our schema as individual_department_map):
+
 CREATE TABLE individual_department_map_3nf (
     internal_id             INT AUTO_INCREMENT PRIMARY KEY,
     thisobject2individual   INT NOT NULL,
@@ -132,11 +111,7 @@ CREATE TABLE individual_department_map_3nf (
     status                  VARCHAR(50)
 );
 
--- ──────────────────────────────────────────────────────────
--- 1-D  DATA MIGRATION from unnormalized → normalized
--- ──────────────────────────────────────────────────────────
 
--- Step A: migrate person identity rows
 INSERT INTO individual_3nf (internal_id, first_name, last_name, email, person_type, thisobject2company)
 SELECT id, first_name, last_name, email, person_type, company_id
 FROM   individual_unnormalized;

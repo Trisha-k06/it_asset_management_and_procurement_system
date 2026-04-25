@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AssetPulse - Enterprise ITAM</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#9dd5ff",
+                        "on-secondary-container": "#586377",
+                        "surface-container": "#eceef0",
+                        "on-background": "#191c1e",
+                        "on-primary-fixed-variant": "#00419c",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#d8e3fb",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#434653",
+                        "on-secondary-fixed": "#111c2d",
+                        "error": "#ba1a1a",
+                        "primary-container": "#0f52ba",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#005e87",
+                        "on-tertiary-fixed-variant": "#004c6e",
+                        "background": "#f7f9fb",
+                        "surface-tint": "#1d59c1",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-low": "#f2f4f6",
+                        "primary-fixed-dim": "#b0c6ff",
+                        "surface-variant": "#e0e3e5",
+                        "on-tertiary-fixed": "#001e2f",
+                        "secondary": "#545f73",
+                        "surface-container-highest": "#e0e3e5",
+                        "primary": "#003c90",
+                        "tertiary-fixed-dim": "#89ceff",
+                        "outline-variant": "#c3c6d5",
+                        "on-primary-container": "#bcceff",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "tertiary": "#004565",
+                        "surface": "#f7f9fb",
+                        "tertiary-fixed": "#c9e6ff",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#b0c6ff",
+                        "outline": "#737784",
+                        "on-surface": "#191c1e",
+                        "primary-fixed": "#d9e2ff",
+                        "secondary-container": "#d5e0f8",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "on-primary-fixed": "#001945"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "grid-gutter": "20px",
+                        "xs": "4px",
+                        "base": "4px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "sidebar-width": "260px",
+                        "md": "16px",
+                        "grid-columns": "12"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h1": ["Inter"],
+                        "h2": ["Inter"],
+                        "code": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "label-md": ["13px", {"lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "h3": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "h1": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "code": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-screen w-[260px] border-r border-slate-800 bg-slate-900 shadow-xl flex flex-col py-6 z-50">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-blue-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-lg" data-icon="inventory_2">inventory_2</span>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tight text-white">AssetPulse</h1>
+<p class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">Enterprise ITAM</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active Tab: Dashboard -->
+<a class="bg-blue-600/10 text-blue-400 border-l-4 border-blue-600 flex items-center gap-3 px-4 py-3 translate-x-1 transition-transform font-sans text-sm font-medium Inter" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 transition-colors duration-200 font-sans text-sm font-medium Inter" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                Assets
+            </a>
+<a class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 transition-colors duration-200 font-sans text-sm font-medium Inter" href="#">
+<span class="material-symbols-outlined" data-icon="store">store</span>
+                Vendors
+            </a>
+<a class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 transition-colors duration-200 font-sans text-sm font-medium Inter" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+                Purchase Orders
+            </a>
+<a class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 transition-colors duration-200 font-sans text-sm font-medium Inter" href="#">
+<span class="material-symbols-outlined" data-icon="badge">badge</span>
+                Employees
+            </a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="p-4 bg-slate-800/50 rounded-xl border border-slate-700">
+<p class="text-xs text-slate-400 mb-2">Storage Status</p>
+<div class="w-full bg-slate-700 h-1.5 rounded-full mb-2">
+<div class="bg-blue-500 h-full w-[65%] rounded-full"></div>
+</div>
+<p class="text-[10px] text-slate-500">650GB of 1TB used</p>
+</div>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 left-[260px] h-16 border-b border-slate-200 bg-white/80 backdrop-blur-md shadow-sm flex items-center justify-between px-8 z-40">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="search">search</span>
+<input class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-10 pr-4 text-body-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="Search assets, POs, or vendors..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:bg-slate-50 rounded-lg p-2 text-slate-500 relative transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="hover:bg-slate-50 rounded-lg p-2 text-slate-500 transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<button class="hover:bg-slate-50 rounded-lg p-2 text-slate-500 transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-label-md font-bold text-slate-900 leading-tight">Admin User</p>
+<p class="text-[10px] text-slate-500 font-medium">Administrator</p>
+</div>
+<img alt="Administrator Profile" class="w-10 h-10 rounded-full border border-slate-200 object-cover" data-alt="Close up portrait of a professional male IT administrator in a modern office setting with soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhd2p6Rn9PfbW3iDZskFwjQI6W_OX7AZF0K7LN6uE6pd6rT_lN0sDwAn6KwESVNul4YG23A6LBZWOf-5pHOciWYlLsg2-Rg5QNlvoKN50hAc3iavN-LgLNLglIFMOeW_63CPXCjulz1GyomWBj0_GYy2AmbgZ-CkNNpw3vCibTbJNjhzZ8Az9WOeoNUw6dszwu949afxlDN2MAiu9PTRMe-xvU5GZSHhXhkfVVJqfcY1UMPgCLm6bcVqAFsYOkRwh_ERaI9zGf7bmi"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[260px] pt-16 min-h-screen">
+<div class="p-8 max-w-[1600px] mx-auto">
+<div class="mb-8 flex items-center justify-between">
+<div>
+<h2 class="font-h1 text-h1 text-on-surface">Asset Dashboard</h2>
+<p class="font-body-md text-body-md text-secondary">Real-time overview of your IT infrastructure and procurement.</p>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg flex items-center gap-2 font-label-md shadow-lg shadow-primary/20 hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                    New Asset
+                </button>
+</div>
+<!-- Inventory Metrics / Stat Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<!-- Stat Card 1 -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="laptop_mac">laptop_mac</span>
+</div>
+<span class="text-label-sm text-green-600 bg-green-50 px-2 py-1 rounded-full">+2.4%</span>
+</div>
+<p class="text-label-md text-secondary mb-1">Total Assets</p>
+<h3 class="text-h1 font-h1 text-on-surface">1,248</h3>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+<span class="material-symbols-outlined" data-icon="store">store</span>
+</div>
+<span class="text-label-sm text-slate-500 bg-slate-50 px-2 py-1 rounded-full">Stable</span>
+</div>
+<p class="text-label-md text-secondary mb-1">Active Vendors</p>
+<h3 class="text-h1 font-h1 text-on-surface">42</h3>
+</div>
+<!-- Stat Card 3 -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+</div>
+<span class="text-label-sm text-amber-600 bg-amber-50 px-2 py-1 rounded-full">5 Urgent</span>
+</div>
+<p class="text-label-md text-secondary mb-1">Open POs</p>
+<h3 class="text-h1 font-h1 text-on-surface">15</h3>
+</div>
+<!-- Stat Card 4 -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+</div>
+<span class="text-label-sm text-green-600 bg-green-50 px-2 py-1 rounded-full">+12 new</span>
+</div>
+<p class="text-label-md text-secondary mb-1">Total Employees</p>
+<h3 class="text-h1 font-h1 text-on-surface">856</h3>
+</div>
+</div>
+<!-- Main Data Section -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Recent Assets Table Card -->
+<div class="col-span-12 lg:col-span-8 bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant flex items-center justify-between">
+<h3 class="font-h2 text-h2 text-on-surface">Recent Assets</h3>
+<button class="text-primary font-label-md hover:underline flex items-center gap-1">
+                            View All Assets
+                            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-slate-50 border-b border-outline-variant">
+<th class="px-6 py-4 font-label-md text-secondary uppercase tracking-wider">Asset Name</th>
+<th class="px-6 py-4 font-label-md text-secondary uppercase tracking-wider">ID</th>
+<th class="px-6 py-4 font-label-md text-secondary uppercase tracking-wider">Category</th>
+<th class="px-6 py-4 font-label-md text-secondary uppercase tracking-wider">Vendor</th>
+<th class="px-6 py-4 font-label-md text-secondary uppercase tracking-wider">Status</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-base" data-icon="laptop">laptop</span>
+</div>
+<span class="font-body-md text-on-surface font-medium">MacBook Pro 16" M2</span>
+</div>
+</td>
+<td class="px-6 py-4 text-code text-secondary font-mono">AP-8829-MBP</td>
+<td class="px-6 py-4 text-body-md text-on-surface">Workstation</td>
+<td class="px-6 py-4 text-body-md text-on-surface">Apple Enterprise</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            Active
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-base" data-icon="monitor">monitor</span>
+</div>
+<span class="font-body-md text-on-surface font-medium">Dell UltraSharp 32"</span>
+</div>
+</td>
+<td class="px-6 py-4 text-code text-secondary font-mono">AP-1142-MON</td>
+<td class="px-6 py-4 text-body-md text-on-surface">Peripheral</td>
+<td class="px-6 py-4 text-body-md text-on-surface">Dell Direct</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            Reserved
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-base" data-icon="router">router</span>
+</div>
+<span class="font-body-md text-on-surface font-medium">Cisco Catalyst 9300</span>
+</div>
+</td>
+<td class="px-6 py-4 text-code text-secondary font-mono">AP-4401-NW</td>
+<td class="px-6 py-4 text-body-md text-on-surface">Network</td>
+<td class="px-6 py-4 text-body-md text-on-surface">CDW Global</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                            In Repair
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-base" data-icon="tablet_mac">tablet_mac</span>
+</div>
+<span class="font-body-md text-on-surface font-medium">iPad Pro 12.9"</span>
+</div>
+</td>
+<td class="px-6 py-4 text-code text-secondary font-mono">AP-5562-TAB</td>
+<td class="px-6 py-4 text-body-md text-on-surface">Mobile</td>
+<td class="px-6 py-4 text-body-md text-on-surface">Apple Enterprise</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                                            Retired
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-base" data-icon="dns">dns</span>
+</div>
+<span class="font-body-md text-on-surface font-medium">HP ProLiant Gen11</span>
+</div>
+</td>
+<td class="px-6 py-4 text-code text-secondary font-mono">AP-0021-SRV</td>
+<td class="px-6 py-4 text-body-md text-on-surface">Server</td>
+<td class="px-6 py-4 text-body-md text-on-surface">HP Enterprise</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            Active
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Side Panel: Quick Actions & Trends -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<!-- Lifecycle Overview -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm p-6">
+<h3 class="font-h3 text-h3 mb-6">Asset Distribution</h3>
+<div class="flex items-center justify-center py-4 mb-6">
+<div class="relative w-40 h-40">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-slate-100" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-width="12"></circle>
+<circle class="text-primary" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-dasharray="440" stroke-dashoffset="110" stroke-width="12"></circle>
+<circle class="text-indigo-400" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-dasharray="440" stroke-dashoffset="350" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-h2 font-h2">75%</span>
+<span class="text-[10px] text-secondary uppercase font-bold">In Use</span>
+</div>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-body-md">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span>Laptops &amp; Desktop</span>
+</div>
+<span class="font-bold">642</span>
+</div>
+<div class="flex items-center justify-between text-body-md">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-indigo-400"></span>
+<span>Mobile Devices</span>
+</div>
+<span class="font-bold">215</span>
+</div>
+<div class="flex items-center justify-between text-body-md">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-slate-200"></span>
+<span>Others</span>
+</div>
+<span class="font-bold">391</span>
+</div>
+</div>
+</div>
+<!-- Vendor Management Quick Links -->
+<div class="bg-slate-900 rounded-xl p-6 text-white overflow-hidden relative">
+<div class="relative z-10">
+<h3 class="font-h3 text-h3 mb-2">Vendor Compliance</h3>
+<p class="text-body-md text-slate-400 mb-6">4 vendors require annual security certification updates this week.</p>
+<button class="w-full bg-white text-slate-900 py-3 rounded-lg font-bold hover:bg-slate-100 transition-colors">
+                                Review Compliance
+                            </button>
+</div>
+<div class="absolute -right-8 -bottom-8 opacity-20 transform rotate-12">
+<span class="material-symbols-outlined text-[120px]" data-icon="verified_user">verified_user</span>
+</div>
+</div>
+<!-- Maintenance Alerts -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm p-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-h3 text-h3">Maintenance</h3>
+<span class="material-symbols-outlined text-amber-500" data-icon="warning">warning</span>
+</div>
+<div class="space-y-4">
+<div class="p-3 bg-amber-50 border border-amber-100 rounded-lg">
+<p class="text-label-md font-bold text-amber-900">UPS Battery Replacement</p>
+<p class="text-[11px] text-amber-700">DC-Floor-4-Row-B | Due in 2 days</p>
+</div>
+<div class="p-3 bg-blue-50 border border-blue-100 rounded-lg">
+<p class="text-label-md font-bold text-blue-900">Server Patch Deployment</p>
+<p class="text-[11px] text-blue-700">Cluster A, B, C | Scheduled: Tonight 22:00</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB (Suppressed on Dashboard as per rules, but shown for contextual action if needed in other screens) -->
+<!-- Not rendering FAB on primary dashboard to prioritize layout density -->
+</body></html>

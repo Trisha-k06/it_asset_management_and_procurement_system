@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AssetPulse — Employees</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary":"#003c90","error":"#ba1a1a","secondary":"#545f73"},fontFamily:{sans:["Inter"]}}}}</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+body{font-family:'Inter',sans-serif}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body class="bg-[#f7f9fb] text-[#191c1e]">
+
+<!-- Sidebar -->
+<aside class="fixed left-0 top-0 h-screen w-[260px] bg-slate-900 border-r border-slate-800 shadow-xl flex flex-col py-6 z-50">
+  <div class="px-6 mb-8 flex items-center gap-3">
+    <div class="w-8 h-8 rounded bg-blue-600 flex items-center justify-center"><span class="material-symbols-outlined text-white text-lg">inventory_2</span></div>
+    <div><h1 class="text-xl font-bold text-white">AssetPulse</h1><p class="text-[10px] text-slate-400 uppercase tracking-widest">Enterprise ITAM</p></div>
+  </div>
+  <nav class="flex-1 space-y-1 px-3">
+    <a href="/"               class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+    <a href="/assets"         class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">inventory_2</span>Assets</a>
+    <a href="/vendors"        class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">store</span>Vendors</a>
+    <a href="/purchase-orders"class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">shopping_cart</span>Purchase Orders</a>
+    <a href="/employees"      class="bg-blue-600/10 text-blue-400 border-l-4 border-blue-600 flex items-center gap-3 px-4 py-3 rounded-r text-sm font-medium"><span class="material-symbols-outlined">badge</span>Employees</a>
+  </nav>
+</aside>
+
+<!-- Topbar -->
+<header class="fixed top-0 right-0 left-[260px] h-16 border-b border-slate-200 bg-white/90 backdrop-blur-md shadow-sm flex items-center justify-between px-8 z-40">
+  <div class="flex items-center gap-4 flex-1 max-w-lg">
+    <div class="relative w-full">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+      <input id="search-input" type="text" placeholder="Search employees..." class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+    </div>
+  </div>
+  <div class="flex items-center gap-3">
+    <span class="text-xs text-slate-500 font-medium">Admin User</span>
+    <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">A</div>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="ml-[260px] pt-16 min-h-screen">
+<div class="p-8">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-semibold text-[#191c1e]">Employees</h1>
+      <p class="text-sm text-[#545f73] mt-1">Manage your organisation's personnel</p>
+    </div>
+    <button onclick="openAddModal()" class="bg-[#003c90] text-white px-5 py-2.5 rounded-lg flex items-center gap-2 text-sm font-medium shadow-md hover:brightness-110 transition-all">
+      <span class="material-symbols-outlined text-lg">add</span>Add Employee
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 mb-6 flex flex-wrap items-center gap-3">
+    <select id="filter-dept" class="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+      <option value="">All Departments</option>
+    </select>
+    <select id="filter-company" class="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+      <option value="">All Companies</option>
+    </select>
+    <button onclick="loadEmployees()" class="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-700 transition-colors">Apply</button>
+    <button onclick="clearFilters()" class="border border-slate-200 text-slate-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">Clear</button>
+    <span id="emp-count" class="ml-auto text-xs text-slate-500"></span>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="bg-slate-50 border-b border-slate-200">
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Employee</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Email</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Department</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Company</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider">Status</th>
+            <th class="px-6 py-4 text-xs font-medium text-[#545f73] uppercase tracking-wider text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="emp-body" class="divide-y divide-slate-100">
+          <tr><td colspan="6" class="px-6 py-10 text-center text-slate-400 text-sm">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</main>
+
+<!-- Add/Edit Employee Modal -->
+<div id="emp-modal" class="modal-backdrop hidden">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 max-h-[92vh] flex flex-col">
+    <div class="flex items-center justify-between p-6 border-b border-slate-100 flex-shrink-0">
+      <h3 id="modal-title" class="text-lg font-semibold">Add Employee</h3>
+      <button onclick="closeModal()" class="p-2 hover:bg-slate-100 rounded-full"><span class="material-symbols-outlined text-slate-500">close</span></button>
+    </div>
+    <div class="overflow-y-auto flex-1">
+    <form id="emp-form" class="p-6 space-y-4" onsubmit="submitEmployee(event)">
+      <input type="hidden" id="emp-id"/>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">First Name <span class="text-red-500">*</span></label>
+          <input id="f-first_name" type="text" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Last Name</label>
+          <input id="f-last_name" type="text" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+        <input id="f-email" type="email" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Employee ID</label>
+        <input id="f-id_num" type="text" placeholder="EMP-001" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Company <span class="text-red-500">*</span></label>
+        <select id="f-thisobject2company" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          <option value="">Select company...</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Department</label>
+        <select id="f-thisobject2department" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          <option value="">Select department...</option>
+        </select>
+      </div>
+
+      <!-- ── Phone Numbers ── -->
+      <div class="border-t border-slate-100 pt-4">
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-sm font-semibold text-slate-700 flex items-center gap-1.5"><span class="material-symbols-outlined text-base text-slate-500">phone</span>Phone Numbers</p>
+          <button type="button" onclick="toggleAddPhone()" class="text-xs text-blue-600 hover:underline flex items-center gap-1"><span class="material-symbols-outlined text-sm">add_circle</span>Add</button>
+        </div>
+
+        <!-- Existing phones list (only in edit mode) -->
+        <div id="phones-list" class="space-y-2 mb-3"></div>
+
+        <!-- Inline add-phone form (hidden by default) -->
+        <div id="add-phone-form" class="hidden bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-2">
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="block text-xs font-medium text-slate-500 mb-1">Dial Code</label>
+              <input id="p-dial" type="text" value="+91" placeholder="+91" class="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-white"/>
+            </div>
+            <div class="col-span-2">
+              <label class="block text-xs font-medium text-slate-500 mb-1">Phone Number <span class="text-red-500">*</span></label>
+              <input id="p-number" type="text" placeholder="9876543210" class="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-white"/>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 items-end">
+            <div>
+              <label class="block text-xs font-medium text-slate-500 mb-1">Type</label>
+              <select id="p-type" class="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-white">
+                <option value="Mobile">Mobile</option>
+                <option value="Work">Work</option>
+                <option value="Home">Home</option>
+                <option value="Fax">Fax</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-3">
+              <label class="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+                <input id="p-primary" type="checkbox" class="rounded border-slate-300"/>Primary
+              </label>
+              <button type="button" onclick="savePhone()" class="ml-auto px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded hover:brightness-110">Save</button>
+              <button type="button" onclick="toggleAddPhone()" class="text-xs text-slate-500 hover:text-slate-700">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <p id="phones-hint" class="text-xs text-slate-400 hidden">Save the employee first, then add phone numbers.</p>
+      </div>
+
+      <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+        <button type="button" onclick="closeModal()" class="px-5 py-2.5 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Cancel</button>
+        <button type="submit" class="px-5 py-2.5 bg-[#003c90] text-white rounded-lg text-sm font-medium hover:brightness-110 shadow-md">Save</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm -->
+<div id="delete-modal" class="modal-backdrop hidden">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm mx-4 p-6 text-center">
+    <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4"><span class="material-symbols-outlined text-red-600 text-2xl">person_remove</span></div>
+    <h3 class="text-lg font-semibold mb-2">Remove Employee?</h3>
+    <p class="text-sm text-slate-500 mb-6">This will permanently delete the employee record and department assignments.</p>
+    <div class="flex gap-3 justify-center">
+      <button onclick="closeDeleteModal()" class="px-5 py-2.5 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Cancel</button>
+      <button id="confirm-delete-btn" class="px-5 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 shadow-md">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 z-[200] hidden">
+  <div id="toast-inner" class="px-5 py-3 rounded-xl shadow-xl text-white text-sm font-medium"></div>
+</div>
+
+<script>
+const API = 'http://localhost:8080';
+let departments=[], companies=[];
+
+function toast(msg, ok=true){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-inner').textContent=msg;
+  document.getElementById('toast-inner').className=`px-5 py-3 rounded-xl shadow-xl text-white text-sm font-medium ${ok?'bg-green-600':'bg-red-600'}`;
+  t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'),3000);
+}
+
+function initials(fn, ln){ return ((fn||'')[0]+(ln||'')[0]).toUpperCase(); }
+const AV_COLORS=['bg-blue-100 text-blue-700','bg-purple-100 text-purple-700','bg-emerald-100 text-emerald-700','bg-amber-100 text-amber-700','bg-rose-100 text-rose-700','bg-teal-100 text-teal-700'];
+
+async function init(){
+  const [depts,comps] = await Promise.all([
+    fetch(`${API}/api/departments`).then(r=>r.json()),
+    fetch(`${API}/api/companies`).then(r=>r.json()),
+  ]);
+  departments=depts; companies=comps;
+
+  const fd=document.getElementById('filter-dept');
+  depts.forEach(d=>fd.insertAdjacentHTML('beforeend',`<option value="${d.internal_id}">${d.dept_name}</option>`));
+  const fc=document.getElementById('filter-company');
+  comps.forEach(c=>fc.insertAdjacentHTML('beforeend',`<option value="${c.internal_id}">${c.company_name}</option>`));
+
+  const mc=document.getElementById('f-thisobject2company');
+  comps.forEach(c=>mc.insertAdjacentHTML('beforeend',`<option value="${c.internal_id}">${c.company_name}</option>`));
+  const md=document.getElementById('f-thisobject2department');
+  depts.forEach(d=>md.insertAdjacentHTML('beforeend',`<option value="${d.internal_id}">${d.dept_name}</option>`));
+
+  loadEmployees();
+}
+
+async function loadEmployees(){
+  const search  = document.getElementById('search-input').value;
+  const dept_id = document.getElementById('filter-dept').value;
+  let url = `${API}/api/employees?search=${encodeURIComponent(search)}`;
+  if(dept_id) url+=`&dept_id=${dept_id}`;
+
+  const tbody=document.getElementById('emp-body');
+  tbody.innerHTML='<tr><td colspan="6" class="px-6 py-10 text-center text-slate-400 text-sm">Loading...</td></tr>';
+  try {
+    const data=await fetch(url).then(r=>r.json());
+    document.getElementById('emp-count').textContent=`${data.length} employee${data.length!==1?'s':''}`;
+    if(data.length===0){
+      tbody.innerHTML='<tr><td colspan="6" class="px-6 py-10 text-center text-slate-400 text-sm">No employees found.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map((e,i)=>{
+      const bg=AV_COLORS[i%AV_COLORS.length];
+      const ini=initials(e.first_name, e.last_name);
+      const sc=e.status==='ACTIVE'||!e.status?'bg-green-100 text-green-700':'bg-slate-100 text-slate-600';
+      const statusLabel=e.status||'ACTIVE';
+      return `<tr class="hover:bg-slate-50 transition-colors">
+        <td class="px-6 py-4">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full ${bg} flex items-center justify-center text-sm font-bold flex-shrink-0">${ini}</div>
+            <div><div class="text-sm font-semibold text-[#191c1e]">${e.first_name} ${e.last_name||''}</div></div>
+          </div>
+        </td>
+        <td class="px-6 py-4 text-sm text-blue-600">${e.email?`<a href="mailto:${e.email}" class="hover:underline">${e.email}</a>`:'—'}</td>
+        <td class="px-6 py-4 text-sm text-slate-600">${e.dept_name||'—'}</td>
+        <td class="px-6 py-4 text-sm text-slate-600">${e.company_name||'—'}</td>
+        <td class="px-6 py-4"><span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${sc}">${statusLabel}</span></td>
+        <td class="px-6 py-4 text-right">
+          <div class="flex justify-end gap-2">
+            <button onclick="openEditModal(${JSON.stringify(e).replace(/"/g,'&quot;')})" class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+            <button onclick="openDeleteModal(${e.internal_id})" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-all"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  } catch(err){ toast('Failed to load employees: '+err.message, false); }
+}
+
+function clearFilters(){
+  document.getElementById('search-input').value='';
+  document.getElementById('filter-dept').value='';
+  document.getElementById('filter-company').value='';
+  loadEmployees();
+}
+document.getElementById('search-input').addEventListener('input',()=>{ clearTimeout(window._st); window._st=setTimeout(loadEmployees,350); });
+
+// ─── Modal ──────────────────────────────────────────────────────────────────
+function openAddModal(){
+  document.getElementById('modal-title').textContent='Add Employee';
+  document.getElementById('emp-id').value='';
+  document.getElementById('emp-form').reset();
+  document.getElementById('phones-list').innerHTML='';
+  document.getElementById('add-phone-form').classList.add('hidden');
+  document.getElementById('phones-hint').classList.remove('hidden');
+  document.getElementById('emp-modal').classList.remove('hidden');
+}
+async function openEditModal(e){
+  document.getElementById('modal-title').textContent='Edit Employee';
+  document.getElementById('emp-id').value=e.internal_id;
+  document.getElementById('f-first_name').value=e.first_name||'';
+  document.getElementById('f-last_name').value=e.last_name||'';
+  document.getElementById('f-email').value=e.email||'';
+  document.getElementById('f-id_num').value=e.id_num||'';
+  document.getElementById('f-thisobject2company').value=e.thisobject2company||'';
+  document.getElementById('f-thisobject2department').value=e.dept_id||'';
+  document.getElementById('phones-hint').classList.add('hidden');
+  document.getElementById('add-phone-form').classList.add('hidden');
+  document.getElementById('emp-modal').classList.remove('hidden');
+  await loadPhones(e.internal_id);
+}
+function closeModal(){
+  document.getElementById('emp-modal').classList.add('hidden');
+  document.getElementById('add-phone-form').classList.add('hidden');
+}
+
+// ─── Phone management ────────────────────────────────────────────────────────
+async function loadPhones(empId){
+  const list = document.getElementById('phones-list');
+  list.innerHTML = '<p class="text-xs text-slate-400">Loading phones…</p>';
+  try {
+    const phones = await fetch(`${API}/api/employees/${empId}/phones`).then(r=>r.json());
+    renderPhones(phones, empId);
+  } catch { list.innerHTML = '<p class="text-xs text-red-400">Failed to load phones.</p>'; }
+}
+
+function renderPhones(phones, empId){
+  const list = document.getElementById('phones-list');
+  if(!phones.length){ list.innerHTML='<p class="text-xs text-slate-400 italic">No phone numbers on record.</p>'; return; }
+  list.innerHTML = phones.map(p=>`
+    <div class="flex items-center justify-between bg-white border border-slate-200 rounded-lg px-3 py-2">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-slate-400 text-base">phone</span>
+        <div>
+          <span class="text-sm font-medium text-slate-800">${p.country_dial_code||''} ${p.phone_number}</span>
+          <span class="ml-2 text-xs text-slate-500">${p.phone_type||''}</span>
+          ${p.is_primary?'<span class="ml-1.5 text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full font-medium">Primary</span>':''}
+        </div>
+      </div>
+      <button type="button" onclick="deletePhone(${empId},${p.internal_id})" class="p-1 text-slate-400 hover:text-red-500 rounded transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
+    </div>
+  `).join('');
+}
+
+function toggleAddPhone(){
+  const f = document.getElementById('add-phone-form');
+  f.classList.toggle('hidden');
+  if(!f.classList.contains('hidden')){ document.getElementById('p-number').focus(); }
+}
+
+async function savePhone(){
+  const empId = document.getElementById('emp-id').value;
+  if(!empId){ toast('Save the employee first before adding phones.', false); return; }
+  const number = document.getElementById('p-number').value.trim();
+  if(!number){ toast('Phone number is required.', false); return; }
+  try {
+    const r = await fetch(`${API}/api/employees/${empId}/phones`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        country_dial_code: document.getElementById('p-dial').value.trim()||'+91',
+        phone_number: number,
+        phone_type: document.getElementById('p-type').value,
+        is_primary: document.getElementById('p-primary').checked
+      })
+    });
+    const d = await r.json(); if(!r.ok) throw new Error(d.error||'Error');
+    document.getElementById('p-number').value='';
+    document.getElementById('p-primary').checked=false;
+    document.getElementById('add-phone-form').classList.add('hidden');
+    toast('Phone added!');
+    await loadPhones(empId);
+  } catch(er){ toast(er.message, false); }
+}
+
+async function deletePhone(empId, phoneId){
+  if(!confirm('Remove this phone number?')) return;
+  try {
+    const r = await fetch(`${API}/api/employees/${empId}/phones/${phoneId}`, {method:'DELETE'});
+    const d = await r.json(); if(!r.ok) throw new Error(d.error||'Error');
+    toast('Phone removed.');
+    await loadPhones(empId);
+  } catch(er){ toast(er.message, false); }
+}
+
+async function submitEmployee(e){
+  e.preventDefault();
+  const id=document.getElementById('emp-id').value;
+  const payload={
+    first_name: document.getElementById('f-first_name').value,
+    last_name: document.getElementById('f-last_name').value||null,
+    email: document.getElementById('f-email').value||null,
+    id_num: document.getElementById('f-id_num').value||null,
+    thisobject2company: document.getElementById('f-thisobject2company').value,
+    thisobject2department: document.getElementById('f-thisobject2department').value||null,
+  };
+  try {
+    const r=await fetch(`${API}/api/employees${id?'/'+id:''}`,{method:id?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const d=await r.json(); if(!r.ok) throw new Error(d.error||'Error');
+    toast(id?'Employee updated!':'Employee added!'); closeModal(); loadEmployees();
+  } catch(er){ toast(er.message,false); }
+}
+
+// ─── Delete ──────────────────────────────────────────────────────────────────
+let _delId=null;
+function openDeleteModal(id){ _delId=id; document.getElementById('delete-modal').classList.remove('hidden'); }
+function closeDeleteModal(){ document.getElementById('delete-modal').classList.add('hidden'); _delId=null; }
+document.getElementById('confirm-delete-btn').onclick = async function(){
+  if(!_delId) return;
+  try {
+    const r=await fetch(`${API}/api/employees/${_delId}`,{method:'DELETE'});
+    const d=await r.json(); if(!r.ok) throw new Error(d.error||'Error');
+    toast('Employee deleted!'); closeDeleteModal(); loadEmployees();
+  } catch(er){ toast(er.message,false); closeDeleteModal(); }
+};
+
+['emp-modal','delete-modal'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',function(e){ if(e.target===this) this.classList.add('hidden'); });
+});
+
+init();
+</script>
+</body>
+</html>

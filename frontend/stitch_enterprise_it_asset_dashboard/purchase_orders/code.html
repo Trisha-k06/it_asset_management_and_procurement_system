@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Purchase Orders | AssetCore</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed": "#d8e3fb",
+                    "surface-container-high": "#e6e8ea",
+                    "on-tertiary-container": "#9dd5ff",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#d8dadc",
+                    "surface-variant": "#e0e3e5",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed": "#d9e2ff",
+                    "on-tertiary-fixed-variant": "#004c6e",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-secondary-fixed": "#111c2d",
+                    "on-primary-fixed-variant": "#00419c",
+                    "surface-tint": "#1d59c1",
+                    "on-secondary-fixed-variant": "#3c475a",
+                    "inverse-primary": "#b0c6ff",
+                    "tertiary-fixed-dim": "#89ceff",
+                    "on-background": "#191c1e",
+                    "surface-container-low": "#f2f4f6",
+                    "secondary-container": "#d5e0f8",
+                    "tertiary-container": "#005e87",
+                    "surface": "#f7f9fb",
+                    "on-error": "#ffffff",
+                    "background": "#f7f9fb",
+                    "surface-container": "#eceef0",
+                    "primary-container": "#0f52ba",
+                    "inverse-surface": "#2d3133",
+                    "outline": "#737784",
+                    "on-secondary-container": "#586377",
+                    "primary": "#003c90",
+                    "secondary-fixed-dim": "#bcc7de",
+                    "on-primary-fixed": "#001945",
+                    "on-tertiary": "#ffffff",
+                    "inverse-on-surface": "#eff1f3",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed": "#001e2f",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed": "#c9e6ff",
+                    "primary-fixed-dim": "#b0c6ff",
+                    "on-primary-container": "#bcceff",
+                    "secondary": "#545f73",
+                    "on-primary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-surface-variant": "#434653",
+                    "tertiary": "#004565",
+                    "surface-bright": "#f7f9fb",
+                    "on-surface": "#191c1e",
+                    "outline-variant": "#c3c6d5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "sidebar-width": "260px",
+                    "xl": "32px",
+                    "lg": "24px",
+                    "md": "16px",
+                    "grid-columns": "12",
+                    "base": "4px",
+                    "xs": "4px",
+                    "grid-gutter": "20px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "h1": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "code": ["Inter"],
+                    "h3": ["Inter"],
+                    "h2": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["13px", {"lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "h1": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "code": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "h3": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "h2": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-screen w-[260px] border-r border-slate-800 bg-slate-900 shadow-xl z-20">
+<div class="flex flex-col h-full py-6">
+<!-- Brand Anchor -->
+<div class="px-6 mb-10">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-lg" data-icon="inventory">inventory</span>
+</div>
+<div>
+<h1 class="text-xl font-black text-white tracking-tight">AssetCore</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Enterprise Admin</p>
+</div>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 space-y-1">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors font-sans text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                    Dashboard
+                </a>
+<!-- Assets -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors font-sans text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                    Assets
+                </a>
+<!-- Vendors -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors font-sans text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+                    Vendors
+                </a>
+<!-- Purchase Orders (ACTIVE) -->
+<a class="flex items-center gap-3 px-4 py-3 text-white bg-slate-800 border-l-4 border-blue-600 font-sans text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+                    Purchase Orders
+                </a>
+<!-- Employees -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors font-sans text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+                    Employees
+                </a>
+</nav>
+<!-- Bottom Profile -->
+<div class="px-4 mt-auto pt-6 border-t border-slate-800">
+<div class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-800 transition-all cursor-pointer">
+<img alt="Administrator Profile" class="w-8 h-8 rounded-full bg-slate-700" data-alt="professional headshot of an IT administrator in a modern office setting with soft background bokeh" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBY7m0WNgb1WcgWemVn1ARg4kTGhLcu3OP1E1ExLRe9OF7Ern0MYrku7xv6Nb-7fU79IOtOJTjUMLG84h5obX7codyFuWZecM-GzMXVxb2iVtbQODTsv-Ytj7nxeNNKwWLWb0gp5CeOo_-zAnIAkeDIJwyb4WAFyhxHk8q-a7aXTlg0p3b6GkT0GIUZ7OkXqp6rAWy8eTT9Pd-vSZYl3f-eu4agK8E84r6vYgR_w5SBd-v0-1q_0tnB-5YQIKrRdrnppp7PDA0H3LvN"/>
+<div class="overflow-hidden">
+<p class="text-white text-xs font-bold truncate">Admin User</p>
+<p class="text-slate-500 text-[10px] truncate">admin@assetcore.com</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-[260px]">
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 left-[260px] h-16 bg-white border-b border-slate-200 shadow-sm z-10">
+<div class="flex justify-between items-center px-8 w-full h-full">
+<div class="flex items-center gap-6">
+<h2 class="text-lg font-bold text-slate-900 font-sans">Procurement Control</h2>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-64 transition-all" placeholder="Search orders, vendors..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-600 hover:bg-slate-50 rounded-full transition-all relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+</button>
+<button class="p-2 text-slate-600 hover:bg-slate-50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="p-2 text-slate-600 hover:bg-slate-50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="mt-16 p-8 max-w-7xl mx-auto">
+<!-- Page Header Actions -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h1 class="font-h1 text-h1 text-on-surface mb-1">Purchase Orders</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage and track your hardware and software procurement lifecycle.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative group">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant bg-white rounded-lg font-label-md text-label-md text-on-surface hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="filter_list">filter_list</span>
+                            Filter by Status
+                            <span class="material-symbols-outlined text-[18px]" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+<button class="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary-container transition-all shadow-md">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+                        Add New PO
+                    </button>
+</div>
+</div>
+<!-- Metrics Overview (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Pending</span>
+<span class="material-symbols-outlined text-yellow-500" data-icon="pending_actions">pending_actions</span>
+</div>
+<p class="text-2xl font-bold text-slate-900">14</p>
+<p class="text-[11px] text-green-600 mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="trending_up">trending_up</span>
+                        8% from last month
+                    </p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Monthly Spend</span>
+<span class="material-symbols-outlined text-blue-500" data-icon="payments">payments</span>
+</div>
+<p class="text-2xl font-bold text-slate-900">$124,500</p>
+<p class="text-[11px] text-slate-500 mt-1">Across 42 active orders</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Received Units</span>
+<span class="material-symbols-outlined text-green-500" data-icon="inventory_2">inventory_2</span>
+</div>
+<p class="text-2xl font-bold text-slate-900">1,280</p>
+<p class="text-[11px] text-slate-500 mt-1">92% fulfillment rate</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Vendor Compliance</span>
+<span class="material-symbols-outlined text-purple-500" data-icon="verified">verified</span>
+</div>
+<p class="text-2xl font-bold text-slate-900">98.4%</p>
+<p class="text-[11px] text-slate-500 mt-1">On-time delivery average</p>
+</div>
+</div>
+<!-- Orders Table Container -->
+<div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+<div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+<h3 class="font-h3 text-h3 text-slate-900">Recent Purchase Orders</h3>
+<div class="flex items-center gap-2">
+<button class="p-1.5 hover:bg-slate-200 rounded text-slate-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="download">download</span>
+</button>
+<button class="p-1.5 hover:bg-slate-200 rounded text-slate-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-white border-b border-slate-200">
+<th class="px-6 py-4 font-label-md text-label-md text-slate-500">PO Number</th>
+<th class="px-6 py-4 font-label-md text-label-md text-slate-500">Date</th>
+<th class="px-6 py-4 font-label-md text-label-md text-slate-500">Vendor Name</th>
+<th class="px-6 py-4 font-label-md text-label-md text-slate-500">Status</th>
+<th class="px-6 py-4 font-label-md text-label-md text-slate-500 text-right">Total Amount</th>
+<th class="px-6 py-4 font-label-md text-label-md text-slate-500"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- PO 1 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<span class="font-code text-code text-blue-700 font-bold">PO-2023-0891</span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-slate-600">Oct 24, 2023</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-slate-100 flex items-center justify-center overflow-hidden">
+<img alt="Apple Logo" class="w-4 h-4" data-alt="minimalist tech company logo icon on a clean neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYMYfXvVaIN23aljdIKjU2AGiOxUeArM0__nVv07OFiEO5xdVyASXx0a_Aeq2pO5k7mqrKICWeaSj5YeYqAc8DWSQ1FCUiu3w_5Z9MqV5FRwgJHNLlth8TWvXhXzlVdmQk3mtwwZSxdc9FUzqHISgIuh1ERlXc41jOxw_pfqy59KsIetqDsi8eBBlvWObEgRqHXuzEWlyePBh8zaH7phnUAavlKmyp4hVIrnqHdPrrrz7F1e6zD0jKE-HnviOaZKTUbw4144VgZqns"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-slate-900">Apple Inc.</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold tracking-tight text-green-700 bg-green-100">PENDING</span>
+</td>
+<td class="px-6 py-4 font-code text-code text-slate-900 font-bold text-right">$42,350.00</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-blue-600 transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- PO 2 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<span class="font-code text-code text-blue-700 font-bold">PO-2023-0890</span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-slate-600">Oct 22, 2023</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-slate-100 flex items-center justify-center overflow-hidden">
+<img alt="AWS Logo" class="w-4 h-4" data-alt="abstract cloud service provider logo icon with clean geometric shapes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDado0HIq-z_8bfvrZWu05bcoyyI1MpXo5NTFaH4NhmoIR8SFSM8gdWCp_H6dhztQEKH45oMn612f5xASMYCDRjSXva7t3Yc5JV8_xfeZ_zQqK9ADZys-RxpVv5C8G7_CV_CeWixLbzWAHD4dPE0wWWgqKgTeUrdxDvJbheukPjrvhGn14uY26p6_XnMXpSjSgNv1B7ARqOinVHdr-CbX4qKVtSgKlkAMGwxMsfFDgKk_F1_YOtSelVvRw5-CIBUFkM3kJ83z9JCIsU"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-slate-900">Amazon Web Services</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold tracking-tight text-blue-700 bg-blue-100">FULLY_RECEIVED</span>
+</td>
+<td class="px-6 py-4 font-code text-code text-slate-900 font-bold text-right">$12,400.00</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-blue-600 transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- PO 3 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<span class="font-code text-code text-blue-700 font-bold">PO-2023-0888</span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-slate-600">Oct 19, 2023</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-slate-100 flex items-center justify-center overflow-hidden">
+<img alt="Dell Logo" class="w-4 h-4" data-alt="modern hardware manufacturer logo emblem with professional finish" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC32FsOF1uWGtpeKQ4fIxIAktq7ZzrIKCEGFSx88mT9QDiri2keoY8SHLYzoQkVqbcjK2Sc8C3obwQBeaXWY16Vy17O6yFz0Y8P1iMiPTvOwjIjWs-i2TX169CGKiA_1ytdc2Sr-KCBCjlIQeoOfeGf1g3Ex5f37K1RBxtFDclJQbPsvwe6-j8QUKMv1wNO4d2t6dmsYxtRTc0Z-QZZVQIEcnnIPa7eIG66rUnGaMUiMlYVuspx9bRsFZSAj3jz466MuTl9bz07OM6j"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-slate-900">Dell Technologies</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold tracking-tight text-red-700 bg-red-100">CANCELLED</span>
+</td>
+<td class="px-6 py-4 font-code text-code text-slate-400 font-bold text-right line-through">$8,200.00</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-blue-600 transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- PO 4 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<span class="font-code text-code text-blue-700 font-bold">PO-2023-0885</span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-slate-600">Oct 15, 2023</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-slate-100 flex items-center justify-center overflow-hidden">
+<img alt="Microsoft Logo" class="w-4 h-4" data-alt="iconic four-color square software giant logo on neutral gray background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB--oFpreGyc0xiH_KL7Cb-FsBCvHG4uuAqOsNwbRv2x4PzsXYFIjsuNc7iJNvtnZwlsYb0KIRkm4JxKyFBGL0sUbUxRyycBRWJrRc5QRs-7g_DmSLYitj1bkE4TplZg1NHY0R2c7e2-MJkzTI7eCNzr1eXxmdn9wStkvi_ANTa8E9oxCV35FN0cF3TdLlB6mBFdy2llBbqaY9cIOOPbJY2PZypLAjqb1WMsv6eI5va6_xKPIk_HJQMbjRXKQf5Sa8eDGbcAbo4aQU9"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-slate-900">Microsoft Corp.</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold tracking-tight text-blue-700 bg-blue-100">FULLY_RECEIVED</span>
+</td>
+<td class="px-6 py-4 font-code text-code text-slate-900 font-bold text-right">$65,900.00</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-blue-600 transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- PO 5 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<span class="font-code text-code text-blue-700 font-bold">PO-2023-0882</span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-slate-600">Oct 12, 2023</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-slate-100 flex items-center justify-center overflow-hidden">
+<img alt="CDW Logo" class="w-4 h-4" data-alt="corporate IT solutions provider logo on a clean white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0rTeuh_3AgO3-eRFxPcuULz9QIPsH4TxcYasilq1SdjsACYaDcL0T_LGng7Ps17Qwds6sSsY0MBPyfGFNBEfmfAjLTTdJ4nvVef6RDnZ-vtdgUdQEvTgKuWEvTACE-5NhDfZK05ng1kGiz-zo9DuYs8c_t1mBfP9TdpV4co2oOcFWFMmLUaVzaOBONy0giRPpbo4IW-nuMp-OY7pQ1WLpkq-hb8tbXe-xfgUA2jtLQSkjg49ZUX3bRMtwB5Y6XZtH5wNAi1jmFFDi"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-slate-900">CDW Direct</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold tracking-tight text-green-700 bg-green-100">PENDING</span>
+</td>
+<td class="px-6 py-4 font-code text-code text-slate-900 font-bold text-right">$11,210.00</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-blue-600 transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="px-6 py-4 border-t border-slate-100 flex justify-between items-center bg-white">
+<p class="font-body-md text-body-md text-slate-500">Showing 1 to 5 of 152 orders</p>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 border border-slate-200 rounded text-sm text-slate-400 cursor-not-allowed">Previous</button>
+<button class="px-3 py-1.5 bg-blue-50 text-blue-600 border border-blue-100 rounded text-sm font-bold">1</button>
+<button class="px-3 py-1.5 hover:bg-slate-50 border border-slate-200 rounded text-sm text-slate-600">2</button>
+<button class="px-3 py-1.5 hover:bg-slate-50 border border-slate-200 rounded text-sm text-slate-600">3</button>
+<span class="px-2 text-slate-300">...</span>
+<button class="px-3 py-1.5 hover:bg-slate-50 border border-slate-200 rounded text-sm text-slate-600">Next</button>
+</div>
+</div>
+</div>
+<!-- Contextual Insights Section (Asymmetric Layout) -->
+<div class="mt-12 grid grid-cols-12 gap-8">
+<div class="col-span-12 md:col-span-8 bg-slate-900 rounded-2xl p-8 relative overflow-hidden shadow-xl">
+<div class="relative z-10">
+<h4 class="text-white text-xl font-bold mb-2">Automated Replenishment Active</h4>
+<p class="text-slate-400 text-sm max-w-md mb-6">Your inventory levels for "Standard Laptop" are below the 10% threshold. AssetCore has drafted 3 new purchase orders for your review.</p>
+<button class="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-bold text-sm hover:bg-blue-500 transition-all flex items-center gap-2">
+                            Review Drafted Orders
+                            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="absolute right-0 top-0 h-full w-1/3 opacity-20 pointer-events-none">
+<img alt="Automation Illustration" class="h-full w-full object-cover" data-alt="futuristic 3D visualization of interconnected data nodes and glowing lines on a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCrwLqI6PmyZ-HLkZ02t-35ItTNntgVy-Bc7RwsOAVI6XssO3vOidiAH2RdczAJ5ayZ8QZs9D1sJmF4UtBfKco51g5V_2QK8Kp_Qv6wQ0iM7HB8BZIHoHH1MG3NUAQD1VFws8PtD9NfpggtH73L_IiFFOVl09bzsBysbx2F1toQxU3PMa3U-zcW7itYvipFnOP5kVbD0BLh9iTVyRyK_vBwCDnqLZE-ypPwcwitsd0-cEt1EMNKqWCsgJQ_lfcwzvt5HgVvtUCsy7L"/>
+</div>
+</div>
+<div class="col-span-12 md:col-span-4 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+<h4 class="text-slate-900 font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-600" data-icon="history">history</span>
+                        Recent Activity
+                    </h4>
+<div class="space-y-4">
+<div class="flex gap-3">
+<div class="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shrink-0"></div>
+<div>
+<p class="text-sm text-slate-900">PO-2023-0885 marked as <span class="font-bold">Fully Received</span></p>
+<p class="text-[11px] text-slate-500">2 hours ago • By Sarah Jenkins</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-2 h-2 rounded-full bg-slate-300 mt-1.5 shrink-0"></div>
+<div>
+<p class="text-sm text-slate-900">Vendor <span class="font-bold">Apple Inc.</span> updated terms</p>
+<p class="text-[11px] text-slate-500">5 hours ago • System Update</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0"></div>
+<div>
+<p class="text-sm text-slate-900">PO-2023-0888 was <span class="font-bold">Cancelled</span></p>
+<p class="text-[11px] text-slate-500">Yesterday • By Marcus Thorne</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2 text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors uppercase tracking-widest">
+                        View Audit Log
+                    </button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

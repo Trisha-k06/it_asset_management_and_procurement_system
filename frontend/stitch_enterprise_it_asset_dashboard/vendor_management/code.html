@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vendor Management | ITAM Global</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container": "#eceef0",
+                        "on-tertiary-container": "#9dd5ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-primary-fixed": "#001945",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "tertiary": "#004565",
+                        "tertiary-container": "#005e87",
+                        "on-secondary-container": "#586377",
+                        "on-primary-fixed-variant": "#00419c",
+                        "on-primary-container": "#bcceff",
+                        "on-tertiary-fixed": "#001e2f",
+                        "surface-dim": "#d8dadc",
+                        "primary-fixed-dim": "#b0c6ff",
+                        "primary-container": "#0f52ba",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f2f4f6",
+                        "on-surface": "#191c1e",
+                        "outline": "#737784",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary": "#545f73",
+                        "on-secondary-fixed": "#111c2d",
+                        "background": "#f7f9fb",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#d9e2ff",
+                        "on-background": "#191c1e",
+                        "surface-variant": "#e0e3e5",
+                        "surface-tint": "#1d59c1",
+                        "tertiary-fixed": "#c9e6ff",
+                        "on-surface-variant": "#434653",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#b0c6ff",
+                        "surface-bright": "#f7f9fb",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "inverse-surface": "#2d3133",
+                        "secondary-fixed": "#d8e3fb",
+                        "tertiary-fixed-dim": "#89ceff",
+                        "surface": "#f7f9fb",
+                        "secondary-container": "#d5e0f8",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#004c6e",
+                        "outline-variant": "#c3c6d5",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#003c90",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "grid-gutter": "20px",
+                        "xs": "4px",
+                        "sidebar-width": "260px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "h1": ["Inter"],
+                        "h3": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "h2": ["Inter"],
+                        "label-md": ["Inter"],
+                        "code": ["Inter"],
+                        "body-lg": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- SideNavBar (Authority Source: JSON) -->
+<aside class="flex flex-col h-screen fixed left-0 top-0 overflow-y-auto bg-slate-900 dark:bg-black border-r border-slate-800 shadow-xl w-[260px] z-50">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-10 h-10 bg-blue-600 flex items-center justify-center rounded-lg shadow-lg">
+<span class="material-symbols-outlined text-white" data-icon="inventory_2">inventory_2</span>
+</div>
+<div>
+<h1 class="text-blue-400 font-black tracking-widest text-lg uppercase">AssetControl</h1>
+<p class="text-slate-500 text-[10px] font-bold uppercase tracking-tighter">Enterprise v2.4</p>
+</div>
+</div>
+<nav class="space-y-1">
+<!-- Dashboard -->
+<a class="text-slate-400 hover:text-slate-200 px-4 py-3 flex items-center gap-3 group cursor-pointer transition-all duration-200 hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<!-- Assets -->
+<a class="text-slate-400 hover:text-slate-200 px-4 py-3 flex items-center gap-3 group cursor-pointer transition-all duration-200 hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-body-md text-body-md">Assets</span>
+</a>
+<!-- Vendors (ACTIVE) -->
+<a class="bg-slate-800 text-white border-l-4 border-blue-600 px-4 py-3 flex items-center gap-3 group cursor-pointer" href="#">
+<span class="material-symbols-outlined text-blue-500" data-icon="handshake">handshake</span>
+<span class="font-body-md text-body-md font-semibold">Vendors</span>
+</a>
+<!-- Procurement -->
+<a class="text-slate-400 hover:text-slate-200 px-4 py-3 flex items-center gap-3 group cursor-pointer transition-all duration-200 hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-body-md text-body-md">Procurement</span>
+</a>
+<!-- Reports -->
+<a class="text-slate-400 hover:text-slate-200 px-4 py-3 flex items-center gap-3 group cursor-pointer transition-all duration-200 hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-body-md text-body-md">Reports</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-6 border-t border-slate-800">
+<a class="text-slate-400 hover:text-slate-200 px-4 py-3 flex items-center gap-3 group cursor-pointer transition-all duration-200 hover:bg-slate-800/50 mb-1" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+<a class="text-slate-400 hover:text-slate-200 px-4 py-3 flex items-center gap-3 group cursor-pointer transition-all duration-200 hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-body-md text-body-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-[260px] min-h-screen flex flex-col">
+<!-- TopAppBar (Authority Source: JSON) -->
+<header class="sticky top-0 z-40 flex justify-between items-center w-full px-6 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center gap-6">
+<span class="text-xl font-bold text-blue-800 dark:text-blue-300 tracking-tight font-inter antialiased">ITAM Global</span>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm w-80 focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all" placeholder="Search vendors, assets, or contracts..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors rounded-full cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors rounded-full cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors rounded-full cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 dark:bg-slate-800 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-on-surface">Admin User</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-wider">Super Administrator</p>
+</div>
+<img alt="Administrator Profile" class="w-8 h-8 rounded-full border border-slate-200" data-alt="professional headshot of a middle-aged male administrator in a corporate setting with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD95BJG2qsGM7R6--AOQOz5wClboxtGgqFqa6tHZM4mljLT5EgzXWS4NWWRiU2M7PXaFHdQGAdhhBR8Zi-s881psEjEbjFZxrzFcdVFET564aUGaWQX0eThLOXoIIcbZuB_cd0noAG5wTcGv7n8rsIDlFoVS-2lqeN9PNr6xX0vjdUuqECuoJptboqVyP1P7k5Fzkc5vcr5wR1aeSEgNuiLY-SOq0JkRRPNlqoViOGpkTH2V8OZbZF9FDfhzMBS3rbZD5TvcduE4HO"/>
+</div>
+</div>
+</header>
+<!-- Canvas Content -->
+<div class="p-8 max-w-[1600px] mx-auto w-full">
+<!-- Breadcrumbs & Actions -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div>
+<nav class="flex items-center gap-2 text-label-sm font-label-sm text-slate-500 mb-1">
+<span class="hover:text-blue-600 cursor-pointer">Vendors</span>
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+<span class="text-blue-700 font-semibold">Vendor List</span>
+</nav>
+<h2 class="text-h1 font-h1 text-on-surface">Manage Vendors</h2>
+</div>
+<button class="bg-primary text-white px-6 py-2.5 rounded-lg font-label-md text-label-md flex items-center gap-2 shadow-lg shadow-blue-900/10 hover:bg-blue-800 transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                    Add New Vendor
+                </button>
+</div>
+<!-- Dashboard Style Metrics (Bento Pattern) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+<div class="bg-white p-6 border border-slate-200 shadow-sm rounded-xl">
+<p class="text-label-sm font-label-sm text-slate-500 uppercase tracking-widest mb-1">Total Vendors</p>
+<div class="flex items-end justify-between">
+<h3 class="text-3xl font-bold text-on-surface">128</h3>
+<span class="text-emerald-600 text-xs font-bold bg-emerald-50 px-2 py-1 rounded">+4 this month</span>
+</div>
+</div>
+<div class="bg-white p-6 border border-slate-200 shadow-sm rounded-xl">
+<p class="text-label-sm font-label-sm text-slate-500 uppercase tracking-widest mb-1">Active Contracts</p>
+<div class="flex items-end justify-between">
+<h3 class="text-3xl font-bold text-on-surface">42</h3>
+<span class="material-symbols-outlined text-blue-600" data-icon="description">description</span>
+</div>
+</div>
+<div class="bg-white p-6 border border-slate-200 shadow-sm rounded-xl">
+<p class="text-label-sm font-label-sm text-slate-500 uppercase tracking-widest mb-1">Pending Renewals</p>
+<div class="flex items-end justify-between">
+<h3 class="text-3xl font-bold text-on-surface">07</h3>
+<span class="text-amber-600 text-xs font-bold bg-amber-50 px-2 py-1 rounded">Action required</span>
+</div>
+</div>
+<div class="bg-white p-6 border border-slate-200 shadow-sm rounded-xl">
+<p class="text-label-sm font-label-sm text-slate-500 uppercase tracking-widest mb-1">Avg Rating</p>
+<div class="flex items-end justify-between">
+<h3 class="text-3xl font-bold text-on-surface">4.8</h3>
+<div class="flex text-amber-400">
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star_half">star_half</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Table Container -->
+<div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+<!-- Table Header/Filter -->
+<div class="p-5 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50/50">
+<div class="flex items-center gap-3 w-full sm:w-auto">
+<div class="relative w-full sm:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="search">search</span>
+<input class="pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm w-full focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all" placeholder="Filter vendors..." type="text"/>
+</div>
+<button class="p-2 border border-slate-200 rounded-lg hover:bg-white text-slate-600">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+<div class="flex items-center gap-2 text-slate-500 text-sm">
+<span>Show:</span>
+<select class="border-slate-200 rounded-lg py-1 text-sm focus:ring-blue-600">
+<option>10</option>
+<option>25</option>
+<option>50</option>
+</select>
+</div>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 text-slate-500 font-label-md text-label-md uppercase tracking-wider">
+<th class="px-6 py-4 border-b border-slate-200 font-semibold">Vendor Name</th>
+<th class="px-6 py-4 border-b border-slate-200 font-semibold">GST No</th>
+<th class="px-6 py-4 border-b border-slate-200 font-semibold">Email</th>
+<th class="px-6 py-4 border-b border-slate-200 font-semibold">Primary Address</th>
+<th class="px-6 py-4 border-b border-slate-200 font-semibold text-center">Status</th>
+<th class="px-6 py-4 border-b border-slate-200 font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs">DL</div>
+<span class="font-semibold text-slate-900">Dell Technologies</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-600 font-code">27AAAAA0000A1Z5</td>
+<td class="px-6 py-4 text-blue-600 hover:underline cursor-pointer">enterprise@dell.com</td>
+<td class="px-6 py-4 text-slate-600 text-sm">124 Corporate Way, Austin, TX</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-xs">AP</div>
+<span class="font-semibold text-slate-900">Apple Inc.</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-600 font-code">05BBBBB1111B2Z6</td>
+<td class="px-6 py-4 text-blue-600 hover:underline cursor-pointer">procurement@apple.com</td>
+<td class="px-6 py-4 text-slate-600 text-sm">One Apple Park Way, Cupertino, CA</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs">MS</div>
+<span class="font-semibold text-slate-900">Microsoft Corp</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-600 font-code">09CCCCC2222C3Z7</td>
+<td class="px-6 py-4 text-blue-600 hover:underline cursor-pointer">licensing@microsoft.com</td>
+<td class="px-6 py-4 text-slate-600 text-sm">Redmond, Washington, US</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-100">On Hold</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center text-red-700 font-bold text-xs">CS</div>
+<span class="font-semibold text-slate-900">Cisco Systems</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-600 font-code">22DDDDD3333D4Z8</td>
+<td class="px-6 py-4 text-blue-600 hover:underline cursor-pointer">support@cisco.com</td>
+<td class="px-6 py-4 text-slate-600 text-sm">San Jose, CA, US</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-50 text-slate-500 border border-slate-100">Inactive</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-slate-50/50 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+<p class="text-label-sm font-label-sm text-slate-500">Showing 1 to 4 of 128 vendors</p>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-white border border-transparent hover:border-slate-200 transition-all">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-xs shadow-md shadow-blue-600/20">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 hover:bg-white border border-transparent hover:border-slate-200 transition-all font-semibold text-xs">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 hover:bg-white border border-transparent hover:border-slate-200 transition-all font-semibold text-xs">3</button>
+<span class="px-1 text-slate-400">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 hover:bg-white border border-transparent hover:border-slate-200 transition-all font-semibold text-xs">13</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-white border border-transparent hover:border-slate-200 transition-all">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Contextual Help / Info Section -->
+<div class="mt-8 bg-blue-900 rounded-xl p-8 text-white relative overflow-hidden shadow-xl">
+<div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+<div class="max-w-xl text-center md:text-left">
+<h4 class="text-h2 font-h2 mb-2">Automate Your Procurement</h4>
+<p class="text-blue-100 text-body-md opacity-90 leading-relaxed mb-6">
+                            Connect your vendor APIs directly to AssetControl to automate purchase orders, tracking, and lifecycle updates without manual data entry.
+                        </p>
+<button class="bg-white text-blue-900 px-6 py-2.5 rounded-lg font-bold text-sm shadow-lg hover:bg-blue-50 transition-all active:scale-95">
+                            Explore Integrations
+                        </button>
+</div>
+<div class="hidden lg:block w-64 h-40 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 rotate-3">
+<div class="space-y-3">
+<div class="h-4 w-3/4 bg-white/20 rounded"></div>
+<div class="h-4 w-1/2 bg-white/20 rounded"></div>
+<div class="h-4 w-full bg-blue-400/40 rounded"></div>
+<div class="mt-4 flex justify-end">
+<div class="w-12 h-6 bg-white rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Background Pattern -->
+<div class="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
+<svg class="h-full w-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<path d="M0 100 C 20 0 50 0 100 100" fill="none" stroke="white" stroke-width="0.5"></path>
+<path d="M0 90 C 30 10 60 10 100 90" fill="none" stroke="white" stroke-width="0.5"></path>
+<path d="M0 80 C 40 20 70 20 100 80" fill="none" stroke="white" stroke-width="0.5"></path>
+</svg>
+</div>
+</div>
+</div>
+</main>
+</body></html>

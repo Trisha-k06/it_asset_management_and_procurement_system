@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AssetPulse — Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  darkMode:"class",
+  theme:{ extend:{
+    colors:{
+      "primary":"#003c90","on-primary":"#ffffff","primary-container":"#0f52ba",
+      "secondary":"#545f73","on-surface":"#191c1e","background":"#f7f9fb",
+      "outline-variant":"#c3c6d5","surface-container-high":"#e6e8ea","error":"#ba1a1a"
+    },
+    fontFamily:{ sans:["Inter","sans-serif"] },
+    spacing:{ "sidebar-width":"260px" }
+  }}
+}
+</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+body{font-family:'Inter',sans-serif}
+</style>
+</head>
+<body class="bg-[#f7f9fb] text-[#191c1e]">
+
+<!-- Sidebar -->
+<aside class="fixed left-0 top-0 h-screen w-[260px] bg-slate-900 border-r border-slate-800 shadow-xl flex flex-col py-6 z-50">
+  <div class="px-6 mb-8 flex items-center gap-3">
+    <div class="w-8 h-8 rounded bg-blue-600 flex items-center justify-center">
+      <span class="material-symbols-outlined text-white text-lg">inventory_2</span>
+    </div>
+    <div>
+      <h1 class="text-xl font-bold text-white tracking-tight">AssetPulse</h1>
+      <p class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">Enterprise ITAM</p>
+    </div>
+  </div>
+  <nav class="flex-1 space-y-1 px-3">
+    <a href="/"               class="bg-blue-600/10 text-blue-400 border-l-4 border-blue-600 flex items-center gap-3 px-4 py-3 rounded-r text-sm font-medium"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+    <a href="/assets"         class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">inventory_2</span>Assets</a>
+    <a href="/vendors"        class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">store</span>Vendors</a>
+    <a href="/purchase-orders"class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">shopping_cart</span>Purchase Orders</a>
+    <a href="/employees"      class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:text-white hover:bg-slate-800 rounded text-sm font-medium transition-colors"><span class="material-symbols-outlined">badge</span>Employees</a>
+  </nav>
+</aside>
+
+<!-- Topbar -->
+<header class="fixed top-0 right-0 left-[260px] h-16 border-b border-slate-200 bg-white/90 backdrop-blur-md shadow-sm flex items-center justify-between px-8 z-40">
+  <h2 class="text-lg font-semibold text-slate-800">Dashboard</h2>
+  <div class="flex items-center gap-3">
+    <span class="text-xs text-slate-500 font-medium">Admin User</span>
+    <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">A</div>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="ml-[260px] pt-16 min-h-screen">
+<div class="p-8 max-w-[1600px] mx-auto">
+
+  <!-- Page header -->
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h2 class="text-3xl font-semibold text-[#191c1e]">Asset Dashboard</h2>
+      <p class="text-sm text-[#545f73] mt-1">Real-time overview of your IT infrastructure and procurement.</p>
+    </div>
+    <a href="/assets" class="bg-[#003c90] text-white px-6 py-2.5 rounded-lg flex items-center gap-2 text-sm font-medium shadow-lg hover:brightness-110 transition-all">
+      <span class="material-symbols-outlined text-sm">add</span>New Asset
+    </a>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-700"><span class="material-symbols-outlined">laptop_mac</span></div>
+        <span class="text-xs text-slate-400 bg-slate-50 px-2 py-1 rounded-full">All Types</span>
+      </div>
+      <p class="text-xs font-medium text-[#545f73] mb-1 uppercase tracking-wide">Total Assets</p>
+      <h3 id="stat-assets" class="text-3xl font-semibold text-[#191c1e]">—</h3>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600"><span class="material-symbols-outlined">store</span></div>
+        <span class="text-xs text-slate-400 bg-slate-50 px-2 py-1 rounded-full">Active</span>
+      </div>
+      <p class="text-xs font-medium text-[#545f73] mb-1 uppercase tracking-wide">Active Vendors</p>
+      <h3 id="stat-vendors" class="text-3xl font-semibold text-[#191c1e]">—</h3>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600"><span class="material-symbols-outlined">receipt_long</span></div>
+        <span id="stat-po-badge" class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full">Pending</span>
+      </div>
+      <p class="text-xs font-medium text-[#545f73] mb-1 uppercase tracking-wide">Open POs</p>
+      <h3 id="stat-pos" class="text-3xl font-semibold text-[#191c1e]">—</h3>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600"><span class="material-symbols-outlined">group</span></div>
+        <span class="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full">Employees</span>
+      </div>
+      <p class="text-xs font-medium text-[#545f73] mb-1 uppercase tracking-wide">Total Employees</p>
+      <h3 id="stat-employees" class="text-3xl font-semibold text-[#191c1e]">—</h3>
+    </div>
+  </div>
+
+  <!-- Main grid -->
+  <div class="grid grid-cols-12 gap-8">
+
+    <!-- Recent Assets table -->
+    <div class="col-span-12 lg:col-span-8 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="text-xl font-semibold text-[#191c1e]">Recent Assets</h3>
+        <a href="/assets" class="text-sm text-blue-700 font-medium hover:underline flex items-center gap-1">View All <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="bg-slate-50 border-b border-slate-100">
+              <th class="px-6 py-3 text-xs font-medium text-[#545f73] uppercase tracking-wider">Asset Tag</th>
+              <th class="px-6 py-3 text-xs font-medium text-[#545f73] uppercase tracking-wider">Make / Model</th>
+              <th class="px-6 py-3 text-xs font-medium text-[#545f73] uppercase tracking-wider">Subtype</th>
+              <th class="px-6 py-3 text-xs font-medium text-[#545f73] uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3"></th>
+            </tr>
+          </thead>
+          <tbody id="recent-assets-body" class="divide-y divide-slate-100">
+            <tr><td colspan="5" class="px-6 py-8 text-center text-slate-400 text-sm">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="col-span-12 lg:col-span-4 space-y-6">
+
+      <!-- Asset Distribution Chart -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+        <h3 class="text-lg font-semibold text-[#191c1e] mb-4">Asset Distribution</h3>
+        <div class="flex items-center justify-center mb-4" style="height:180px">
+          <canvas id="assetChart"></canvas>
+        </div>
+        <div id="chart-legend" class="space-y-2 mt-2"></div>
+      </div>
+
+      <!-- PO Summary -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+        <h3 class="text-lg font-semibold text-[#191c1e] mb-4">PO Summary</h3>
+        <div id="po-summary" class="space-y-3">
+          <p class="text-sm text-slate-400">Loading...</p>
+        </div>
+      </div>
+
+      <!-- Maintenance Alerts -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-[#191c1e]">Maintenance Alerts</h3>
+          <span class="material-symbols-outlined text-amber-500">warning</span>
+        </div>
+        <div id="maintenance-alerts" class="space-y-3">
+          <p class="text-sm text-slate-400">Loading...</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</main>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 z-50 hidden">
+  <div id="toast-inner" class="flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl text-white text-sm font-medium"></div>
+</div>
+
+<script>
+const API = 'http://localhost:8080';
+const STATUS_COLORS = {
+  'Active':'bg-green-100 text-green-800','In Repair':'bg-amber-100 text-amber-800',
+  'Reserved':'bg-blue-100 text-blue-800','Retired':'bg-slate-100 text-slate-700',
+  'Disposed':'bg-red-100 text-red-800'
+};
+const CHART_PALETTE = ['#003c90','#0f52ba','#4b8de6','#89ceff','#c9e6ff','#e0e3e5'];
+
+function showToast(msg, ok=true){
+  const t = document.getElementById('toast');
+  document.getElementById('toast-inner').textContent = msg;
+  document.getElementById('toast-inner').className =
+    `flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl text-white text-sm font-medium ${ok?'bg-green-600':'bg-red-600'}`;
+  t.classList.remove('hidden');
+  setTimeout(()=>t.classList.add('hidden'),3000);
+}
+
+let chartInstance = null;
+
+async function loadDashboard(){
+  try {
+    const r = await fetch(`${API}/api/dashboard/stats`);
+    if(!r.ok) throw new Error(await r.text());
+    const d = await r.json();
+
+    document.getElementById('stat-assets').textContent    = d.total_assets.toLocaleString();
+    document.getElementById('stat-vendors').textContent   = d.active_vendors.toLocaleString();
+    document.getElementById('stat-pos').textContent       = d.open_pos.toLocaleString();
+    document.getElementById('stat-employees').textContent = d.total_employees.toLocaleString();
+if(d.open_pos > 0) document.getElementById('stat-po-badge').textContent = d.open_pos + ' Pending';
+
+    // Recent assets
+    const tbody = document.getElementById('recent-assets-body');
+    if(d.recent_assets.length === 0){
+      tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-400 text-sm">No assets found</td></tr>';
+    } else {
+      tbody.innerHTML = d.recent_assets.map(a => {
+        const sc = STATUS_COLORS[a.status_name] || 'bg-slate-100 text-slate-700';
+        return `<tr class="hover:bg-slate-50 transition-colors cursor-pointer" onclick="location.href='/assets'">
+          <td class="px-6 py-4 text-sm font-semibold text-blue-700">${a.asset_tag}</td>
+          <td class="px-6 py-4 text-sm text-slate-700">${a.make||''} ${a.asset_model||''}</td>
+          <td class="px-6 py-4 text-sm text-slate-500">${a.subtype_name||''}</td>
+          <td class="px-6 py-4"><span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${sc}">${a.status_name}</span></td>
+          <td class="px-6 py-4 text-right"><span class="material-symbols-outlined text-slate-300 text-base">chevron_right</span></td>
+        </tr>`;
+      }).join('');
+    }
+
+    // Chart
+    const labels = d.asset_distribution_by_type.map(x=>x.type_name);
+    const values = d.asset_distribution_by_type.map(x=>x.count);
+    if(chartInstance) chartInstance.destroy();
+    const ctx = document.getElementById('assetChart').getContext('2d');
+    chartInstance = new Chart(ctx,{
+      type:'doughnut',
+      data:{labels, datasets:[{data:values, backgroundColor:CHART_PALETTE, borderWidth:2, borderColor:'#fff'}]},
+      options:{cutout:'68%',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ` ${c.label}: ${c.parsed}`;}}}}}
+    });
+    const legend = document.getElementById('chart-legend');
+    legend.innerHTML = labels.map((l,i)=>`
+      <div class="flex items-center justify-between text-sm">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full" style="background:${CHART_PALETTE[i%CHART_PALETTE.length]}"></span>
+          <span class="text-slate-600">${l}</span>
+        </div>
+        <span class="font-semibold text-slate-800">${values[i]}</span>
+      </div>`).join('');
+
+    // PO Summary
+    const poDiv = document.getElementById('po-summary');
+    const poColors = {PENDING:'text-amber-600 bg-amber-50',FULLY_RECEIVED:'text-green-600 bg-green-50',CANCELLED:'text-red-500 bg-red-50',APPROVED:'text-blue-600 bg-blue-50'};
+    if(d.po_summary.length===0){
+      poDiv.innerHTML='<p class="text-sm text-slate-400">No purchase orders</p>';
+    } else {
+      poDiv.innerHTML = d.po_summary.map(p=>{
+        const cls = poColors[p.status]||'text-slate-600 bg-slate-50';
+        return `<div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase px-2.5 py-1 rounded-full ${cls}">${p.status}</span>
+          <span class="text-sm font-semibold text-slate-800">${p.count} PO${p.count!==1?'s':''}</span>
+        </div>`;
+      }).join('');
+    }
+
+    // Maintenance Alerts
+    const mDiv = document.getElementById('maintenance-alerts');
+    if(d.maintenance_due.length===0){
+      mDiv.innerHTML='<p class="text-sm text-slate-400">No upcoming maintenance in next 30 days.</p>';
+    } else {
+      mDiv.innerHTML = d.maintenance_due.map(m=>`
+        <div class="p-3 bg-amber-50 border border-amber-100 rounded-lg">
+          <p class="text-xs font-bold text-amber-900">${m.asset_tag} — ${m.make||''} ${m.asset_model||''}</p>
+          <p class="text-[11px] text-amber-700 mt-0.5">${m.notes||'Scheduled'} · Due ${m.opened_on}</p>
+        </div>`).join('');
+    }
+
+  } catch(e){
+    showToast('Failed to load dashboard: '+e.message, false);
+  }
+}
+
+loadDashboard();
+</script>
+</body>
+</html>
